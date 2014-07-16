@@ -1,0 +1,4 @@
+.ycm_extra_conf.py*
+tags
+.ctags
+libcld2.so
