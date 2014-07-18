@@ -1,11 +1,12 @@
 #include "cld2wrapper.h"
 
+
+
 CLD2Wrapper::CLD2Wrapper()
 {
 }   
 
-
-const char* CLD2Wrapper::detect(const char* &buffer) {
+DetectedLanguage CLD2Wrapper::detect(const char* &buffer) {
     int FLAGS_repeat = 1;
     bool FLAGS_plain = false;
 
@@ -41,6 +42,10 @@ const char* CLD2Wrapper::detect(const char* &buffer) {
                 percent3, normalized_score3,
                 NULL, &text_bytes, &is_reliable);
     }
-
-    return CLD2::LanguageName(summary_lang);
+    
+    DetectedLanguage dl;
+    dl.language_code = CLD2::LanguageCode(summary_lang);
+    dl.language_name = CLD2::LanguageName(summary_lang);
+    dl.is_reliable = is_reliable;
+    return dl;
 }

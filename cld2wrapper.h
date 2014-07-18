@@ -28,13 +28,17 @@ extern const CLD2::CLD2TableSummary kOcta2_obj;
 extern const short kAvgDeltaOctaScore[];
 #endif 
 
-
+typedef struct DetectedLanguage {
+    const char* language_name;
+    const char* language_code;
+    bool is_reliable;
+} DetectedLanguage;
 
 class CLD2Wrapper
 {
     public:
         CLD2Wrapper();
-        const char* detect(const char* &buffer);
+        DetectedLanguage detect(const char* &buffer);
 };
 
 #endif

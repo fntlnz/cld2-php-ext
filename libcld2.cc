@@ -31,8 +31,6 @@ zend_object_value cld2_create_handler(zend_class_entry *type TSRMLS_DC)
 
     ALLOC_HASHTABLE(obj->std.properties);
     zend_hash_init(obj->std.properties, 0, NULL, ZVAL_PTR_DTOR, 0);
-    /*zend_hash_copy(obj->std.properties, &type->default_properties,*/
-        //(copy_ctor_func_t)zval_add_ref, (void *)&tmp, sizeof(zval *));
 
     retval.handle = zend_objects_store_put(obj, NULL,
         cld2_free_storage, NULL TSRMLS_CC);
@@ -69,8 +67,16 @@ PHP_METHOD(CLD2, detect)
         RETURN_NULL();
     }
 
+    // Prepare array
     const char* buffer = strdup(text);
-    RETURN_STRING(cld2->detect(buffer), 1);
+    DetectedLanguage lang = cld2->detect(buffer);
+    char* language_code = strdup(lang.language_code);
+    char* language_name = strdup(lang.language_name);
+    zval *mysubarray;
+    array_init(return_value);
+    add_assoc_string(return_value, "language_code", language_code, 1);
+    add_assoc_string(return_value, "language_name", language_name, 1);
+    add_assoc_bool(return_value, "is_reliable", lang.is_reliable);
 }
 
 zend_function_entry cld2_methods[] = {
