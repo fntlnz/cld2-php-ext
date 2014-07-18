@@ -5,8 +5,16 @@
 
 ```php
 $cld2 = new CLD2();
-echo $cld2->detect("My name is Melissa");
-// output: ENGLISH
+$lang = $cld2->detect('My name is Melissa');
+// Output
+array(3) {
+  ["language_code"]=>
+  string(2) "en"
+  ["language_name"]=>
+  string(7) "ENGLISH"
+  ["is_reliable"]=>
+  bool(true)
+}
 ```
 
 ## Installation
