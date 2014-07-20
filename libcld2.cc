@@ -76,6 +76,7 @@ PHP_METHOD(CLD2, detect)
     array_init(return_value);
     add_assoc_string(return_value, "language_code", language_code, 1);
     add_assoc_string(return_value, "language_name", language_name, 1);
+    add_assoc_double(return_value, "language_accuracy", lang.language_accuracy);
     add_assoc_bool(return_value, "is_reliable", lang.is_reliable);
 }
 

@@ -31,6 +31,7 @@ extern const short kAvgDeltaOctaScore[];
 typedef struct DetectedLanguage {
     const char* language_name;
     const char* language_code;
+    float language_accuracy;
     bool is_reliable;
 } DetectedLanguage;
 
