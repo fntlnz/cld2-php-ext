@@ -7,14 +7,17 @@
 $cld2 = new CLD2();
 $lang = $cld2->detect('My name is Melissa');
 // Output
-array(3) {
+array(4) {
   ["language_code"]=>
   string(2) "en"
   ["language_name"]=>
   string(7) "ENGLISH"
+  ["language_accuracy"]=>
+  int(95)
   ["is_reliable"]=>
   bool(true)
 }
+
 ```
 
 ## Installation
