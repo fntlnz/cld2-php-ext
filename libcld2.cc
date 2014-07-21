@@ -72,11 +72,10 @@ PHP_METHOD(CLD2, detect)
     DetectedLanguage lang = cld2->detect(buffer);
     char* language_code = strdup(lang.language_code);
     char* language_name = strdup(lang.language_name);
-    zval *mysubarray;
     array_init(return_value);
     add_assoc_string(return_value, "language_code", language_code, 1);
     add_assoc_string(return_value, "language_name", language_name, 1);
-    add_assoc_double(return_value, "language_accuracy", lang.language_accuracy);
+    add_assoc_long(return_value, "language_accuracy", lang.language_accuracy);
     add_assoc_bool(return_value, "is_reliable", lang.is_reliable);
 }
 
