@@ -31,7 +31,7 @@ zend_object_value cld2_create_handler(zend_class_entry *type TSRMLS_DC)
 
     ALLOC_HASHTABLE(obj->std.properties);
     zend_hash_init(obj->std.properties, 0, NULL, ZVAL_PTR_DTOR, 0);
-
+    object_properties_init((zend_object*) &(obj->std.properties), type);
     retval.handle = zend_objects_store_put(obj, NULL,
         cld2_free_storage, NULL TSRMLS_CC);
     retval.handlers = &cld2_object_handlers;
@@ -46,6 +46,10 @@ PHP_METHOD(CLD2, __construct)
     zval *object = getThis();
     cld2 = new CLD2Wrapper();
     cld2_object *obj = (cld2_object *)zend_object_store_get_object(object TSRMLS_CC);
+
+    // Properties
+    add_property_bool(getThis(), "isPlainText", cld2->isPlainText);
+
     obj->cld2 = cld2;
 }
 
@@ -100,9 +104,7 @@ PHP_MINIT_FUNCTION(cld2)
 }
 
 zend_module_entry cld2_module_entry = {
-#if ZEND_MODULE_API_NO >= 20010901
     STANDARD_MODULE_HEADER,
-#endif
     PHP_CLD2_EXTNAME,
     NULL,                  /* Functions */
     PHP_MINIT(cld2),
@@ -110,9 +112,7 @@ zend_module_entry cld2_module_entry = {
     NULL,                  /* RINIT */
     NULL,                  /* RSHUTDOWN */
     NULL,                  /* MINFO */
-#if ZEND_MODULE_API_NO >= 20010901
     PHP_CLD2_EXTVER,
-#endif
     STANDARD_MODULE_PROPERTIES
 };
 

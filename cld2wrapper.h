@@ -40,6 +40,7 @@ class CLD2Wrapper
     public:
         CLD2Wrapper();
         DetectedLanguage detect(const char* &buffer);
+        bool isPlainText;
 };
 
 #endif

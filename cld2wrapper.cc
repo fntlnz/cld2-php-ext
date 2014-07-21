@@ -1,16 +1,11 @@
 #include "cld2wrapper.h"
 
-
-
-CLD2Wrapper::CLD2Wrapper()
+CLD2Wrapper::CLD2Wrapper() : isPlainText(false)
 {
 }   
 
 DetectedLanguage CLD2Wrapper::detect(const char* &buffer) {
-    int FLAGS_repeat = 1;
-    bool FLAGS_plain = false;
-
-    // Detect language
+    
     const char* tldhint = "";
     int enchint = UNKNOWN_ENCODING;
     CLD2::Language langhint = CLD2::UNKNOWN_LANGUAGE;
@@ -31,17 +26,14 @@ DetectedLanguage CLD2Wrapper::detect(const char* &buffer) {
     int percent3[3];
     double normalized_score3[3];
     CLD2::ResultChunkVector resultchunkvector;
-    bool is_plain_text = FLAGS_plain;
     int text_bytes;
 
     CLD2::CLDHints cldhints = { NULL, tldhint, enchint, langhint };
 
-    for (int i = 0; i < FLAGS_repeat; ++i) {
-        summary_lang = CLD2::DetectLanguageSummaryV2(buffer, n, is_plain_text,
-                &cldhints, allow_extended_lang, flags, plus_one, language3,
-                percent3, normalized_score3,
-                NULL, &text_bytes, &is_reliable);
-    }
+    summary_lang = CLD2::DetectLanguageSummaryV2(buffer, n, this->isPlainText,
+            &cldhints, allow_extended_lang, flags, plus_one, language3,
+            percent3, normalized_score3,
+            NULL, &text_bytes, &is_reliable);
 
     DetectedLanguage dl;
     dl.language_code = CLD2::LanguageCode(summary_lang);
