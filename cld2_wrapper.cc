@@ -1,11 +1,11 @@
-#include "cld2wrapper.h"
+#include "cld2_wrapper.h"
 
-CLD2Wrapper::CLD2Wrapper() : isPlainText(false)
+CLD2Wrapper::CLD2Wrapper() : mIsPlainText(false)
 {
-}   
+}
 
-DetectedLanguage CLD2Wrapper::detect(const char* &buffer) {
-    
+DetectedLanguage CLD2Wrapper::detect(const char* &buffer)
+{
     const char* tldhint = "";
     int enchint = UNKNOWN_ENCODING;
     CLD2::Language langhint = CLD2::UNKNOWN_LANGUAGE;
@@ -30,16 +30,21 @@ DetectedLanguage CLD2Wrapper::detect(const char* &buffer) {
 
     CLD2::CLDHints cldhints = { NULL, tldhint, enchint, langhint };
 
-    summary_lang = CLD2::DetectLanguageSummaryV2(buffer, n, this->isPlainText,
+    summary_lang = CLD2::DetectLanguageSummaryV2(buffer, n, this->isPlainText(),
             &cldhints, allow_extended_lang, flags, plus_one, language3,
             percent3, normalized_score3,
             NULL, &text_bytes, &is_reliable);
 
-    DetectedLanguage dl;
-    dl.language_code = CLD2::LanguageCode(summary_lang);
-    dl.language_name = CLD2::LanguageName(summary_lang);
-    dl.language_accuracy = percent3[0];
-    dl.is_reliable = is_reliable;
+    DetectedLanguage *dl = new DetectedLanguage();
+    dl->languageCode = CLD2::LanguageCode(summary_lang);
+    dl->languageName = CLD2::LanguageName(summary_lang);
+    dl->languageProbability = percent3[0];
+    dl->isReliable = is_reliable;
 
-    return dl;
+    return *dl;
+}
+
+bool CLD2Wrapper::isPlainText()
+{
+    return this->mIsPlainText;
 }

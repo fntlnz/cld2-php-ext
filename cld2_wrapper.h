@@ -8,7 +8,7 @@
 #include "libcld2/internal/lang_script.h"
 #include "libcld2/internal/utf8statetable.h"
 
-
+#include "detected_language.h"
 
 #ifndef CLD2_CLASS_H
 #define CLD2_CLASS_H
@@ -28,19 +28,16 @@ extern const CLD2::CLD2TableSummary kOcta2_obj;
 extern const short kAvgDeltaOctaScore[];
 #endif 
 
-typedef struct DetectedLanguage {
-    const char* language_name;
-    const char* language_code;
-    int language_accuracy;
-    bool is_reliable;
-} DetectedLanguage;
-
 class CLD2Wrapper
 {
     public:
         CLD2Wrapper();
         DetectedLanguage detect(const char* &buffer);
-        bool isPlainText;
+        CLD2Wrapper setPlainText(bool pt);
+        bool isPlainText();
+        void setPlainText();
+    protected:
+        bool mIsPlainText;
 };
 
 #endif

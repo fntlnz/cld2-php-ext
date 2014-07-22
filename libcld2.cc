@@ -1,5 +1,5 @@
 #include "php_cld2.h"
-#include "cld2wrapper.h"
+#include "cld2_wrapper.h"
 
 zend_class_entry *cld2_ce;
 zend_object_handlers cld2_object_handlers;
@@ -46,10 +46,6 @@ PHP_METHOD(CLD2, __construct)
     zval *object = getThis();
     cld2 = new CLD2Wrapper();
     cld2_object *obj = (cld2_object *)zend_object_store_get_object(object TSRMLS_CC);
-
-    // Properties
-    add_property_bool(getThis(), "isPlainText", cld2->isPlainText);
-
     obj->cld2 = cld2;
 }
 
@@ -74,18 +70,46 @@ PHP_METHOD(CLD2, detect)
     // Prepare array
     const char* buffer = strdup(text);
     DetectedLanguage lang = cld2->detect(buffer);
-    char* language_code = strdup(lang.language_code);
-    char* language_name = strdup(lang.language_name);
+    char* language_code = strdup(lang.languageCode);
+    char* language_name = strdup(lang.languageName);
     array_init(return_value);
     add_assoc_string(return_value, "language_code", language_code, 1);
     add_assoc_string(return_value, "language_name", language_name, 1);
-    add_assoc_long(return_value, "language_accuracy", lang.language_accuracy);
-    add_assoc_bool(return_value, "is_reliable", lang.is_reliable);
+    add_assoc_long(return_value, "language_probability", lang.languageProbability);
+    add_assoc_bool(return_value, "is_reliable", lang.isReliable);
 }
+
+PHP_METHOD(CLD2, isPlainText)
+{
+    CLD2Wrapper *cld2;
+    cld2_object *obj = (cld2_object *)zend_object_store_get_object(
+            getThis() TSRMLS_CC);
+    cld2 = obj->cld2;
+    if (cld2 == NULL) {
+        RETURN_NULL();
+    }
+
+    // TODO: complete
+};
+
+PHP_METHOD(CLD2, setPlainText)
+{
+    CLD2Wrapper *cld2;
+    cld2_object *obj = (cld2_object *)zend_object_store_get_object(
+            getThis() TSRMLS_CC);
+    cld2 = obj->cld2;
+    if (cld2 == NULL) {
+        RETURN_NULL();
+    }
+
+    // TODO: complete
+};
 
 zend_function_entry cld2_methods[] = {
     PHP_ME(CLD2, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
     PHP_ME(CLD2, detect, NULL, ZEND_ACC_PUBLIC)
+    PHP_ME(CLD2, isPlainText, NULL, ZEND_ACC_PUBLIC)
+    PHP_ME(CLD2, setPlainText, NULL, ZEND_ACC_PUBLIC)
     {NULL, NULL, NULL}
 };
 
