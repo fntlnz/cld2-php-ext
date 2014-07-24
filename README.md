@@ -12,7 +12,7 @@ array(4) {
   string(2) "en"
   ["language_name"]=>
   string(7) "ENGLISH"
-  ["language_accuracy"]=>
+  ["language_probability"]=>
   int(95)
   ["is_reliable"]=>
   bool(true)
