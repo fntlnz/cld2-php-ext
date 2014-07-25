@@ -1,4 +1,4 @@
-# Chrome Language Detect PHP Extension
+## Compact Language Detector 2 - php ext
 
 
 ## Usage
