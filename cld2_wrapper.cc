@@ -1,7 +1,8 @@
 #include "cld2_wrapper.h"
 
-CLD2Wrapper::CLD2Wrapper() : mIsPlainText(false)
+CLD2Wrapper::CLD2Wrapper()
 {
+    this->mIsPlainText = false;
 }
 
 DetectedLanguage CLD2Wrapper::detect(const char* &buffer)
@@ -47,4 +48,9 @@ DetectedLanguage CLD2Wrapper::detect(const char* &buffer)
 bool CLD2Wrapper::isPlainText()
 {
     return this->mIsPlainText;
+}
+
+void CLD2Wrapper::setPlainText(bool pt)
+{
+    this->mIsPlainText = pt;
 }

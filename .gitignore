@@ -33,3 +33,4 @@ mkinstalldirs
 modules/
 run-tests.php
 cld2_wrapper.lo
+cld2_object.loT

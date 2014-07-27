@@ -39,7 +39,6 @@ zend_object_value cld2_create_handler(zend_class_entry *type TSRMLS_DC)
     return retval;
 }
 
-/* {{{ CLD2 Methods */
 PHP_METHOD(CLD2, __construct)
 {
     CLD2Wrapper *cld2 = NULL;
@@ -63,6 +62,7 @@ PHP_METHOD(CLD2, detect)
         getThis() TSRMLS_CC);
 
     cld2 = obj->cld2;
+
     if (cld2 == NULL) {
         RETURN_NULL();
     }
@@ -88,21 +88,27 @@ PHP_METHOD(CLD2, isPlainText)
     if (cld2 == NULL) {
         RETURN_NULL();
     }
-
-    // TODO: complete
+    RETURN_BOOL(cld2->isPlainText());
 };
 
 PHP_METHOD(CLD2, setPlainText)
 {
+    bool isPlainText;
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "b", &isPlainText) == FAILURE) {
+        RETURN_NULL();
+    }
+
     CLD2Wrapper *cld2;
     cld2_object *obj = (cld2_object *)zend_object_store_get_object(
             getThis() TSRMLS_CC);
     cld2 = obj->cld2;
+
     if (cld2 == NULL) {
         RETURN_NULL();
     }
 
-    // TODO: complete
+    cld2->setPlainText(isPlainText);
 };
 
 zend_function_entry cld2_methods[] = {
@@ -112,8 +118,6 @@ zend_function_entry cld2_methods[] = {
     PHP_ME(CLD2, setPlainText, NULL, ZEND_ACC_PUBLIC)
     {NULL, NULL, NULL}
 };
-
-/* }}} */
 
 PHP_MINIT_FUNCTION(cld2)
 {
