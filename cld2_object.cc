@@ -22,7 +22,6 @@ void cld2_free_storage(void *object TSRMLS_CC)
 
 zend_object_value cld2_create_handler(zend_class_entry *type TSRMLS_DC)
 {
-    zval *tmp;
     zend_object_value retval;
 
     cld2_object *obj = (cld2_object *)emalloc(sizeof(cld2_object));

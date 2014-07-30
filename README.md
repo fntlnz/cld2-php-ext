@@ -25,6 +25,7 @@ array(4) {
 ### Compile libcld2
 
 ```
+git svn clone http://cld2.googlecode.com/svn/trunk/ libcld2
 cd libcld2/internal
 ./compile_libs.sh
 ```
@@ -32,17 +33,10 @@ cd libcld2/internal
 ### Compile extension
 ```
 phpize
+./configure --with-cld2=libcld2
 make -j
-```
-and install
-```
 make install
 ```
 
-## TODO:
-- [ ] Externalize libcld2
-- [ ] Allow output of languages probability vector  
-
 ## NOTES
 libcld2: https://code.google.com/p/cld2/
-For now libcld2 is included with the extension source.
