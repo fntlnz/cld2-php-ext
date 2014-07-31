@@ -6,6 +6,7 @@
 #include "debug.h"
 #include "integral_types.h"
 #include "lang_script.h"
+#include "compact_lang_det_hint_code.h"
 #include "utf8statetable.h"
 
 #include "detected_language.h"
@@ -39,8 +40,6 @@ public:
     void setTldHint(const char *tldHint);
 
     void setEncHint(int encHint);
-
-    void setLangHintFromLanguageName(const char *languageName);
 
     void setLangHint(CLD2::Language langHint);
 

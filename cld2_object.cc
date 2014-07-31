@@ -57,8 +57,7 @@ PHP_METHOD(CLD2, detect)
         RETURN_NULL();
     }
 
-    cld2_object *obj = (cld2_object *)zend_object_store_get_object(
-        getThis() TSRMLS_CC);
+    cld2_object *obj = (cld2_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
 
     cld2 = obj->cld2;
 
@@ -81,8 +80,7 @@ PHP_METHOD(CLD2, detect)
 PHP_METHOD(CLD2, isPlainText)
 {
     CLD2Wrapper *cld2;
-    cld2_object *obj = (cld2_object *)zend_object_store_get_object(
-            getThis() TSRMLS_CC);
+    cld2_object *obj = (cld2_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
     cld2 = obj->cld2;
     if (cld2 == NULL) {
         RETURN_NULL();
@@ -110,11 +108,69 @@ PHP_METHOD(CLD2, setPlainText)
     cld2->setPlainText(isPlainText);
 };
 
+PHP_METHOD(CLD2, getTldHint)
+{
+    CLD2Wrapper *cld2;
+    cld2_object *obj = (cld2_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+    cld2 = obj->cld2;
+    if (cld2 == NULL) {
+        RETURN_NULL();
+    }
+    RETURN_STRING(cld2->getTldHint(), 1);
+};
+
+PHP_METHOD(CLD2, setTldHint)
+{
+    char *hint;
+    int hint_len;
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &hint, &hint_len) == FAILURE) {
+        RETURN_NULL();
+    }
+
+    CLD2Wrapper *cld2;
+    cld2_object *obj = (cld2_object *)zend_object_store_get_object(
+            getThis() TSRMLS_CC);
+    cld2 = obj->cld2;
+
+    if (cld2 == NULL) {
+        RETURN_NULL();
+    }
+
+    cld2->setTldHint(hint);
+};
+
+// TODO: complete this method
+PHP_METHOD(CLD2, getEncHint)
+{
+}
+
+// TODO: complete this method
+PHP_METHOD(CLD2, setEncHint)
+{
+}
+
+// TODO: complete this method
+PHP_METHOD(CLD2, getLangHint)
+{
+}
+
+// TODO: complete this method
+PHP_METHOD(CLD2, setLangHint)
+{
+}
+
 zend_function_entry cld2_methods[] = {
     PHP_ME(CLD2, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
     PHP_ME(CLD2, detect, NULL, ZEND_ACC_PUBLIC)
     PHP_ME(CLD2, isPlainText, NULL, ZEND_ACC_PUBLIC)
     PHP_ME(CLD2, setPlainText, NULL, ZEND_ACC_PUBLIC)
+    PHP_ME(CLD2, getTldHint, NULL, ZEND_ACC_PUBLIC)
+    PHP_ME(CLD2, setTldHint, NULL, ZEND_ACC_PUBLIC)
+    PHP_ME(CLD2, getEncHint, NULL, ZEND_ACC_PUBLIC)
+    PHP_ME(CLD2, setEncHint, NULL, ZEND_ACC_PUBLIC)
+    PHP_ME(CLD2, getLangHint, NULL, ZEND_ACC_PUBLIC)
+    PHP_ME(CLD2, setLangHint, NULL, ZEND_ACC_PUBLIC)
     {NULL, NULL, NULL}
 };
 
@@ -124,8 +180,7 @@ PHP_MINIT_FUNCTION(cld2)
     INIT_CLASS_ENTRY(ce, "CLD2", cld2_methods);
     cld2_ce = zend_register_internal_class(&ce TSRMLS_CC);
     cld2_ce->create_object = cld2_create_handler;
-    memcpy(&cld2_object_handlers,
-            zend_get_std_object_handlers(), sizeof(zend_object_handlers));
+    memcpy(&cld2_object_handlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers));
     cld2_object_handlers.clone_obj = NULL;
     return SUCCESS;
 }

@@ -32,6 +32,7 @@ DetectedLanguage CLD2Wrapper::detect(const char *&buffer) {
             &textBytes,
             &isReliable);
 
+
     DetectedLanguage *dl = new DetectedLanguage();
     dl->languageCode = CLD2::LanguageCode(detectedLanguage);
     dl->languageName = CLD2::LanguageName(detectedLanguage);
@@ -53,16 +54,13 @@ void CLD2Wrapper::setEncHint(int encHint) {
     this->encHint = encHint;
 }
 
-void CLD2Wrapper::setLangHintFromLanguageName(const char *languageName) {
-    this->setLangHint(CLD2::GetLanguageFromName(languageName));
-}
 
 void CLD2Wrapper::setLangHint(CLD2::Language langHint) {
     this->langHint = langHint;
 }
 
 bool CLD2Wrapper::isPlainText() {
-    return false;
+    return this->plainText;
 }
 
 char const *CLD2Wrapper::getTldHint() {
