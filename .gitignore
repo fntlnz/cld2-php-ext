@@ -1,6 +1,7 @@
 .ycm_extra_conf.py*
 tags
 .ctags
+libcld2/
 libcld2.so
 libcld2_full.so
 .deps
