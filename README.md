@@ -22,24 +22,36 @@ array(4) {
 
 ## Installation
 
-### Compile libcld2
+First of all clone current repository and enter into its directory.
 
 ```bash
-git svn clone http://cld2.googlecode.com/svn/trunk/ libcld2
-cd libcld2/internal
-./compile_libs.sh
-cp libcld2.so /usr/local/lib 
+git clone git@github.com:fntlnz/cld2-php-ext.git
+cd cld2-php-ext
 ```
 
-### Compile extension
+### Compile CLD2 library
+
+```bash
+svn checkout http://cld2.googlecode.com/svn/trunk/ libcld2
+cd libcld2/internal
+./compile_libs.sh
+sudo cp libcld2.so /usr/local/lib 
+```
+
+### Compile CLD2 PHP extension
+
+Come back to the `cld2-php-ext` directory and execute:
 
 ```bash
 phpize
 ./configure --with-cld2=libcld2
 make -j
-make install
+sudo make install
 ```
 
+Do not forget to add `extension=cld2.so` to your PHP ini.
+
 ## NOTES
-- libcld2: https://code.google.com/p/cld2/
-- CLD2FullVersion: https://code.google.com/p/cld2/wiki/CLD2FullVersion
+
+- [CLD2 library](https://code.google.com/p/cld2)
+- [CLD2 full version](https://code.google.com/p/cld2/wiki/CLD2FullVersion)
