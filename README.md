@@ -4,7 +4,7 @@
 ## Usage
 
 ```php
-$cld2 = new CLD2();
+$cld2 = new CLD2\Detector();
 $lang = $cld2->detect('My name is Melissa');
 // Output
 array(4) {
@@ -32,7 +32,7 @@ cd cld2-php-ext
 ### Compile CLD2 library
 
 ```bash
-svn checkout http://cld2.googlecode.com/svn/trunk/ libcld2
+git svn clone http://cld2.googlecode.com/svn/trunk/ libcld2
 cd libcld2/internal
 ./compile_libs.sh
 sudo cp libcld2.so /usr/local/lib 
