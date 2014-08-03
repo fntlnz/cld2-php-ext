@@ -9,29 +9,16 @@
 #include "compact_lang_det_hint_code.h"
 #include "utf8statetable.h"
 
-#include "detected_language.h"
+#include "DetectedLanguage.h"
 
-#ifndef CLD2_CLASS_H
-#define CLD2_CLASS_H
+#ifndef __CLD2Detector_H_
+#define __CLD2Detector_H_
 
-
-// Scaffolding
 static const int UNKNOWN_ENCODING = 0;
 
-#ifndef CLD2_DYNAMIC_MODE
-extern const CLD2::UTF8PropObj cld_generated_CjkUni_obj;
-extern const CLD2::CLD2TableSummary kCjkDeltaBi_obj;
-extern const CLD2::CLD2TableSummary kDistinctBiTable_obj;
-extern const CLD2::CLD2TableSummary kQuad_obj;
-extern const CLD2::CLD2TableSummary kDeltaOcta_obj;
-extern const CLD2::CLD2TableSummary kDistinctOcta_obj;
-extern const CLD2::CLD2TableSummary kOcta2_obj;
-extern const short kAvgDeltaOctaScore[];
-#endif
-
-class CLD2Wrapper {
+class CLD2Detector {
 public:
-    CLD2Wrapper();
+    CLD2Detector();
 
     DetectedLanguage detect(const char *&buffer);
 
@@ -58,4 +45,5 @@ protected:
     CLD2::Language langHint;
 };
 
-#endif
+
+#endif //__CLD2Detector_H_

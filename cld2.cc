@@ -1,18 +1,18 @@
 #include "php_cld2.h"
-#include "cld2_wrapper.h"
+#include "CLD2Detector.h"
 
 zend_class_entry *cld2_ce;
 zend_object_handlers cld2_object_handlers;
 
-struct cld2_object {
+struct cld2 {
     zend_object std;
-    CLD2Wrapper *cld2;
+    CLD2Detector *detector;
 };
 
 void cld2_free_storage(void *object TSRMLS_CC)
 {
-    cld2_object *obj = (cld2_object *)object;
-    delete obj->cld2;
+    cld2 *obj = (cld2 *)object;
+    delete obj->detector;
 
     zend_hash_destroy(obj->std.properties);
     FREE_HASHTABLE(obj->std.properties);
@@ -24,8 +24,8 @@ zend_object_value cld2_create_handler(zend_class_entry *type TSRMLS_DC)
 {
     zend_object_value retval;
 
-    cld2_object *obj = (cld2_object *)emalloc(sizeof(cld2_object));
-    memset(obj, 0, sizeof(cld2_object));
+    cld2 *obj = (cld2 *)emalloc(sizeof(cld2));
+    memset(obj, 0, sizeof(cld2));
     obj->std.ce = type;
 
     ALLOC_HASHTABLE(obj->std.properties);
@@ -40,16 +40,16 @@ zend_object_value cld2_create_handler(zend_class_entry *type TSRMLS_DC)
 
 PHP_METHOD(CLD2, __construct)
 {
-    CLD2Wrapper *cld2 = NULL;
+    CLD2Detector *detector = NULL;
     zval *object = getThis();
-    cld2 = new CLD2Wrapper();
-    cld2_object *obj = (cld2_object *)zend_object_store_get_object(object TSRMLS_CC);
-    obj->cld2 = cld2;
+    detector = new CLD2Detector();
+    cld2 *obj = (cld2 *)zend_object_store_get_object(object TSRMLS_CC);
+    obj->detector = detector;
 }
 
 PHP_METHOD(CLD2, detect)
 {
-    CLD2Wrapper *cld2;
+    CLD2Detector *detector;
     char *text;
     int text_len;
 
@@ -57,17 +57,17 @@ PHP_METHOD(CLD2, detect)
         RETURN_NULL();
     }
 
-    cld2_object *obj = (cld2_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+    cld2 *obj = (cld2 *)zend_object_store_get_object(getThis() TSRMLS_CC);
 
-    cld2 = obj->cld2;
+    detector = obj->detector;
 
-    if (cld2 == NULL) {
+    if (detector == NULL) {
         RETURN_NULL();
     }
 
     // Prepare array
     const char* buffer = strdup(text);
-    DetectedLanguage lang = cld2->detect(buffer);
+    DetectedLanguage lang = detector->detect(buffer);
     char* language_code = strdup(lang.languageCode);
     char* language_name = strdup(lang.languageName);
     array_init(return_value);
@@ -79,13 +79,13 @@ PHP_METHOD(CLD2, detect)
 
 PHP_METHOD(CLD2, isPlainText)
 {
-    CLD2Wrapper *cld2;
-    cld2_object *obj = (cld2_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
-    cld2 = obj->cld2;
-    if (cld2 == NULL) {
+    CLD2Detector *detector;
+    cld2 *obj = (cld2 *)zend_object_store_get_object(getThis() TSRMLS_CC);
+    detector = obj->detector;
+    if (detector == NULL) {
         RETURN_NULL();
     }
-    RETURN_BOOL(cld2->isPlainText());
+    RETURN_BOOL(detector->isPlainText());
 };
 
 PHP_METHOD(CLD2, setPlainText)
@@ -96,27 +96,27 @@ PHP_METHOD(CLD2, setPlainText)
         RETURN_NULL();
     }
 
-    CLD2Wrapper *cld2;
-    cld2_object *obj = (cld2_object *)zend_object_store_get_object(
+    CLD2Detector *detector;
+    cld2 *obj = (cld2 *)zend_object_store_get_object(
             getThis() TSRMLS_CC);
-    cld2 = obj->cld2;
+    detector = obj->detector;
 
-    if (cld2 == NULL) {
+    if (detector == NULL) {
         RETURN_NULL();
     }
 
-    cld2->setPlainText(isPlainText);
+    detector->setPlainText(isPlainText);
 };
 
 PHP_METHOD(CLD2, getTldHint)
 {
-    CLD2Wrapper *cld2;
-    cld2_object *obj = (cld2_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
-    cld2 = obj->cld2;
-    if (cld2 == NULL) {
+    CLD2Detector *detector;
+    cld2 *obj = (cld2 *)zend_object_store_get_object(getThis() TSRMLS_CC);
+    detector = obj->detector;
+    if (detector == NULL) {
         RETURN_NULL();
     }
-    RETURN_STRING(cld2->getTldHint(), 1);
+    RETURN_STRING(detector->getTldHint(), 1);
 };
 
 PHP_METHOD(CLD2, setTldHint)
@@ -128,16 +128,16 @@ PHP_METHOD(CLD2, setTldHint)
         RETURN_NULL();
     }
 
-    CLD2Wrapper *cld2;
-    cld2_object *obj = (cld2_object *)zend_object_store_get_object(
+    CLD2Detector *detector;
+    cld2 *obj = (cld2 *)zend_object_store_get_object(
             getThis() TSRMLS_CC);
-    cld2 = obj->cld2;
+    detector = obj->detector;
 
-    if (cld2 == NULL) {
+    if (detector == NULL) {
         RETURN_NULL();
     }
 
-    cld2->setTldHint(hint);
+    detector->setTldHint(hint);
 };
 
 // TODO: complete this method
@@ -177,7 +177,7 @@ zend_function_entry cld2_methods[] = {
 PHP_MINIT_FUNCTION(cld2)
 {
     zend_class_entry ce;
-    INIT_CLASS_ENTRY(ce, "CLD2", cld2_methods);
+    INIT_NS_CLASS_ENTRY(ce, "CLD2", "Detector", cld2_methods);
     cld2_ce = zend_register_internal_class(&ce TSRMLS_CC);
     cld2_ce->create_object = cld2_create_handler;
     memcpy(&cld2_object_handlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers));

@@ -1,12 +1,13 @@
-#include "cld2_wrapper.h"
+#include "CLD2Detector.h"
 
-CLD2Wrapper::CLD2Wrapper() {
+CLD2Detector::CLD2Detector() {
     this->plainText = false;
     this->tldHint = "";
     this->langHint = CLD2::UNKNOWN_LANGUAGE;
+    this->encHint = UNKNOWN_ENCODING;
 }
 
-DetectedLanguage CLD2Wrapper::detect(const char *&buffer) {
+DetectedLanguage CLD2Detector::detect(const char *&buffer) {
     int flags = 0;
     bool isReliable;
     int n = strlen(buffer);
@@ -42,35 +43,34 @@ DetectedLanguage CLD2Wrapper::detect(const char *&buffer) {
     return *dl;
 }
 
-void CLD2Wrapper::setPlainText(bool pt) {
+void CLD2Detector::setPlainText(bool pt) {
     this->plainText = pt;
 }
 
-void CLD2Wrapper::setTldHint(const char *tldHint) {
+void CLD2Detector::setTldHint(const char *tldHint) {
     this->tldHint = tldHint;
 }
 
-void CLD2Wrapper::setEncHint(int encHint) {
+void CLD2Detector::setEncHint(int encHint) {
     this->encHint = encHint;
 }
 
-
-void CLD2Wrapper::setLangHint(CLD2::Language langHint) {
+void CLD2Detector::setLangHint(CLD2::Language langHint) {
     this->langHint = langHint;
 }
 
-bool CLD2Wrapper::isPlainText() {
+bool CLD2Detector::isPlainText() {
     return this->plainText;
 }
 
-char const *CLD2Wrapper::getTldHint() {
+char const *CLD2Detector::getTldHint() {
     return this->tldHint;
 }
 
-int CLD2Wrapper::getEncHint() {
+int CLD2Detector::getEncHint() {
     return this->encHint;
 }
 
-CLD2::Language const &CLD2Wrapper::getLangHint() {
+CLD2::Language const &CLD2Detector::getLangHint() {
     return this->langHint;
 }

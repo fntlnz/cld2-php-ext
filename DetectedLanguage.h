@@ -1,3 +1,6 @@
+#ifndef __DetectedLanguage_H_
+#define __DetectedLanguage_H_
+
 class DetectedLanguage {
 public:
     const char *languageName;
@@ -5,3 +8,5 @@ public:
     int languageProbability;
     bool isReliable;
 };
+
+#endif //__DetectedLanguage_H_
