@@ -1,7 +1,7 @@
 #include "php_cld2.h"
 #include "CLD2Detector.h"
 
-zend_class_entry *cld2_ce;
+zend_class_entry *cld2_detector_ce;
 zend_object_handlers cld2_object_handlers;
 
 struct cld2 {
@@ -38,7 +38,7 @@ zend_object_value cld2_create_handler(zend_class_entry *type TSRMLS_DC)
     return retval;
 }
 
-PHP_METHOD(CLD2, __construct)
+PHP_METHOD(cld2_detector, __construct)
 {
     CLD2Detector *detector = NULL;
     zval *object = getThis();
@@ -47,7 +47,7 @@ PHP_METHOD(CLD2, __construct)
     obj->detector = detector;
 }
 
-PHP_METHOD(CLD2, detect)
+PHP_METHOD(cld2_detector, detect)
 {
     CLD2Detector *detector;
     char *text;
@@ -77,7 +77,7 @@ PHP_METHOD(CLD2, detect)
     add_assoc_bool(return_value, "is_reliable", lang.isReliable);
 }
 
-PHP_METHOD(CLD2, isPlainText)
+PHP_METHOD(cld2_detector, isPlainText)
 {
     CLD2Detector *detector;
     cld2 *obj = (cld2 *)zend_object_store_get_object(getThis() TSRMLS_CC);
@@ -88,7 +88,7 @@ PHP_METHOD(CLD2, isPlainText)
     RETURN_BOOL(detector->isPlainText());
 };
 
-PHP_METHOD(CLD2, setPlainText)
+PHP_METHOD(cld2_detector, setPlainText)
 {
     bool isPlainText;
 
@@ -108,7 +108,7 @@ PHP_METHOD(CLD2, setPlainText)
     detector->setPlainText(isPlainText);
 };
 
-PHP_METHOD(CLD2, getTldHint)
+PHP_METHOD(cld2_detector, getTldHint)
 {
     CLD2Detector *detector;
     cld2 *obj = (cld2 *)zend_object_store_get_object(getThis() TSRMLS_CC);
@@ -119,7 +119,7 @@ PHP_METHOD(CLD2, getTldHint)
     RETURN_STRING(detector->getTldHint(), 1);
 };
 
-PHP_METHOD(CLD2, setTldHint)
+PHP_METHOD(cld2_detector, setTldHint)
 {
     char *hint;
     int hint_len;
@@ -141,36 +141,36 @@ PHP_METHOD(CLD2, setTldHint)
 };
 
 // TODO: complete this method
-PHP_METHOD(CLD2, getEncHint)
+PHP_METHOD(cld2_detector, getEncHint)
 {
 }
 
 // TODO: complete this method
-PHP_METHOD(CLD2, setEncHint)
+PHP_METHOD(cld2_detector, setEncHint)
 {
 }
 
 // TODO: complete this method
-PHP_METHOD(CLD2, getLangHint)
+PHP_METHOD(cld2_detector, getLangHint)
 {
 }
 
 // TODO: complete this method
-PHP_METHOD(CLD2, setLangHint)
+PHP_METHOD(cld2_detector, setLangHint)
 {
 }
 
 zend_function_entry cld2_methods[] = {
-    PHP_ME(CLD2, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
-    PHP_ME(CLD2, detect, NULL, ZEND_ACC_PUBLIC)
-    PHP_ME(CLD2, isPlainText, NULL, ZEND_ACC_PUBLIC)
-    PHP_ME(CLD2, setPlainText, NULL, ZEND_ACC_PUBLIC)
-    PHP_ME(CLD2, getTldHint, NULL, ZEND_ACC_PUBLIC)
-    PHP_ME(CLD2, setTldHint, NULL, ZEND_ACC_PUBLIC)
-    PHP_ME(CLD2, getEncHint, NULL, ZEND_ACC_PUBLIC)
-    PHP_ME(CLD2, setEncHint, NULL, ZEND_ACC_PUBLIC)
-    PHP_ME(CLD2, getLangHint, NULL, ZEND_ACC_PUBLIC)
-    PHP_ME(CLD2, setLangHint, NULL, ZEND_ACC_PUBLIC)
+    PHP_ME(cld2_detector, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
+    PHP_ME(cld2_detector, detect, NULL, ZEND_ACC_PUBLIC)
+    PHP_ME(cld2_detector, isPlainText, NULL, ZEND_ACC_PUBLIC)
+    PHP_ME(cld2_detector, setPlainText, NULL, ZEND_ACC_PUBLIC)
+    PHP_ME(cld2_detector, getTldHint, NULL, ZEND_ACC_PUBLIC)
+    PHP_ME(cld2_detector, setTldHint, NULL, ZEND_ACC_PUBLIC)
+    PHP_ME(cld2_detector, getEncHint, NULL, ZEND_ACC_PUBLIC)
+    PHP_ME(cld2_detector, setEncHint, NULL, ZEND_ACC_PUBLIC)
+    PHP_ME(cld2_detector, getLangHint, NULL, ZEND_ACC_PUBLIC)
+    PHP_ME(cld2_detector, setLangHint, NULL, ZEND_ACC_PUBLIC)
     {NULL, NULL, NULL}
 };
 
@@ -178,8 +178,8 @@ PHP_MINIT_FUNCTION(cld2)
 {
     zend_class_entry ce;
     INIT_NS_CLASS_ENTRY(ce, "CLD2", "Detector", cld2_methods);
-    cld2_ce = zend_register_internal_class(&ce TSRMLS_CC);
-    cld2_ce->create_object = cld2_create_handler;
+    cld2_detector_ce = zend_register_internal_class(&ce TSRMLS_CC);
+    cld2_detector_ce->create_object = cld2_create_handler;
     memcpy(&cld2_object_handlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers));
     cld2_object_handlers.clone_obj = NULL;
     return SUCCESS;
