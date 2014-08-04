@@ -31,8 +31,7 @@ zend_object_value cld2_create_handler(zend_class_entry *type TSRMLS_DC)
     ALLOC_HASHTABLE(obj->std.properties);
     zend_hash_init(obj->std.properties, 0, NULL, ZVAL_PTR_DTOR, 0);
     object_properties_init((zend_object*) &(obj->std.properties), type);
-    retval.handle = zend_objects_store_put(obj, NULL,
-        cld2_free_storage, NULL TSRMLS_CC);
+    retval.handle = zend_objects_store_put(obj, NULL, cld2_free_storage, NULL TSRMLS_CC);
     retval.handlers = &cld2_object_handlers;
 
     return retval;
@@ -86,7 +85,7 @@ PHP_METHOD(cld2_detector, isPlainText)
         RETURN_NULL();
     }
     RETURN_BOOL(detector->isPlainText());
-};
+}
 
 PHP_METHOD(cld2_detector, setPlainText)
 {
@@ -106,7 +105,7 @@ PHP_METHOD(cld2_detector, setPlainText)
     }
 
     detector->setPlainText(isPlainText);
-};
+}
 
 PHP_METHOD(cld2_detector, getTldHint)
 {
@@ -117,7 +116,7 @@ PHP_METHOD(cld2_detector, getTldHint)
         RETURN_NULL();
     }
     RETURN_STRING(detector->getTldHint(), 1);
-};
+}
 
 PHP_METHOD(cld2_detector, setTldHint)
 {
@@ -138,16 +137,38 @@ PHP_METHOD(cld2_detector, setTldHint)
     }
 
     detector->setTldHint(hint);
-};
-
-// TODO: complete this method
-PHP_METHOD(cld2_detector, getEncHint)
-{
 }
 
-// TODO: complete this method
+PHP_METHOD(cld2_detector, getEncHint)
+{
+    CLD2Detector *detector;
+    cld2 *obj = (cld2 *)zend_object_store_get_object(getThis() TSRMLS_CC);
+    detector = obj->detector;
+    if (detector == NULL) {
+        RETURN_NULL();
+    }
+
+    RETURN_LONG(detector->getEncHint());
+}
+
 PHP_METHOD(cld2_detector, setEncHint)
 {
+    long hint;
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &hint) == FAILURE) {
+        RETURN_NULL();
+    }
+
+    CLD2Detector *detector;
+    cld2 *obj = (cld2 *) zend_object_store_get_object(getThis() TSRMLS_CC);
+    detector = obj->detector;
+
+    if (detector == NULL) {
+        RETURN_NULL();
+    }
+
+    detector->setEncHint(hint);
+
 }
 
 // TODO: complete this method
@@ -177,7 +198,7 @@ zend_function_entry cld2_methods[] = {
 PHP_MINIT_FUNCTION(cld2)
 {
     zend_class_entry ce;
-    INIT_NS_CLASS_ENTRY(ce, "CLD2", "Detector", cld2_methods);
+    INIT_CLASS_ENTRY(ce, "CLD2Detector", cld2_methods);
     cld2_detector_ce = zend_register_internal_class(&ce TSRMLS_CC);
     cld2_detector_ce->create_object = cld2_create_handler;
     memcpy(&cld2_object_handlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers));

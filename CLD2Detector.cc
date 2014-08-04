@@ -51,7 +51,9 @@ void CLD2Detector::setTldHint(const char *tldHint) {
     this->tldHint = tldHint;
 }
 
+
 void CLD2Detector::setEncHint(int encHint) {
+    //TODO: check if hint is between 0 and NUM_ENCODINGS
     this->encHint = encHint;
 }
 

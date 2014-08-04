@@ -9,6 +9,7 @@
 #include "compact_lang_det_hint_code.h"
 #include "utf8statetable.h"
 
+
 #include "DetectedLanguage.h"
 
 #ifndef __CLD2Detector_H_

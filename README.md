@@ -4,7 +4,7 @@
 ## Usage
 
 ```php
-$cld2 = new CLD2\Detector();
+$cld2 = new \CLD2Detector();
 $lang = $cld2->detect('My name is Melissa');
 // Output
 array(4) {
