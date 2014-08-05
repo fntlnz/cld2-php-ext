@@ -22,5 +22,5 @@ if test "$PHP_CLD2" != "no"; then
     PHP_ADD_LIBRARY_WITH_PATH(cld2, $PHP_CLD2/internal, CLD2_SHARED_LIBADD)
     PHP_SUBST(CLD2_SHARED_LIBADD)
     
-    PHP_NEW_EXTENSION(cld2, cld2.cc CLD2Detector.cc, $ext_shared,,,1)
+    PHP_NEW_EXTENSION(cld2, cld2.cc, $ext_shared,,,1)
 fi
