@@ -4,25 +4,16 @@
 zend_class_entry *cld2_detector_ce;
 zend_object_handlers cld2_object_handlers;
 
+struct st_detected_language {
+    CLD2::Language language;
+    int probability;
+    bool is_reliable;
+    char* language_code;
+    char* language_name;
+};
 
-PHP_METHOD(cld2_detector, __construct)
+st_detected_language detect_language(char *text, int text_len, bool is_plain_text, char *tld_hint)
 {
-
-}
-
-
-PHP_METHOD(cld2_detector, detect)
-{
-    zval *detector, *is_plain;
-    char *text;
-    int text_len;
-
-    if (zend_parse_method_parameters(ZEND_NUM_ARGS() TSRMLS_CC, getThis(), "Os", &detector, cld2_detector_ce, &text, &text_len) == FAILURE) {
-        RETURN_NULL();
-    }
-
-    is_plain = zend_read_property(cld2_detector_ce, detector, "isPlainText", sizeof("isPlainText") -1, 1 TSRMLS_CC);
-
     int flags = 0;
     bool is_reliable;
 
@@ -34,29 +25,51 @@ PHP_METHOD(cld2_detector, detect)
 
     //CLD2::CLDHints cld_hints = {NULL, this->getTldHint(), this->getEncHint(), this->getLangHint()};
 
-    CLD2::CLDHints cld_hints = {NULL, "", 0, CLD2::UNKNOWN_LANGUAGE};
-    CLD2::Language detectedLanguage = CLD2::ExtDetectLanguageSummary(
-            text,
-            text_len,
-            (bool) is_plain,
-            &cld_hints,
-            flags,
-            language3,
-            percent3,
-            normalized_score3,
-            NULL,
-            &text_bytes,
-            &is_reliable);
+    CLD2::CLDHints cld_hints = {NULL, tld_hint, 0, CLD2::UNKNOWN_LANGUAGE};
+    CLD2::Language lang = CLD2::ExtDetectLanguageSummary(
+                text,
+                text_len,
+                is_plain_text,
+                &cld_hints,
+                flags,
+                language3,
+                percent3,
+                normalized_score3,
+                NULL,
+                &text_bytes,
+                &is_reliable);
 
+    st_detected_language dl;
+    dl.language = lang;
+    dl.probability = percent3[0];
+    dl.is_reliable = is_reliable;
+    dl.language_code = strdup(CLD2::LanguageCode(lang));
+    dl.language_name = strdup(CLD2::LanguageName(lang));
+
+    return dl;
+}
+
+PHP_METHOD(cld2_detector, detect)
+{
+    zval *detector, *is_plain, *tld_hint;
+    char *text;
+    int text_len;
+
+    if (zend_parse_method_parameters(ZEND_NUM_ARGS() TSRMLS_CC, getThis(), "Os", &detector, cld2_detector_ce, &text, &text_len) == FAILURE) {
+        RETURN_NULL();
+    }
+
+    is_plain = zend_read_property(cld2_detector_ce, detector, "isPlainText", sizeof("isPlainText") -1, 1 TSRMLS_CC);
+    tld_hint = zend_read_property(cld2_detector_ce, detector, "tldHint", sizeof("tldHint") -1, 1 TSRMLS_CC);
+
+    st_detected_language dl = detect_language(text, text_len, (bool) is_plain, (char *) tld_hint);
 
     // Prepare array
-    char* language_code = strdup(CLD2::LanguageCode(detectedLanguage));
-    char* language_name = strdup(CLD2::LanguageName(detectedLanguage));
     array_init(return_value);
-    add_assoc_string(return_value, "language_code", language_code, 1);
-    add_assoc_string(return_value, "language_name", language_name, 1);
-    add_assoc_long(return_value, "language_probability", percent3[0]);
-    add_assoc_bool(return_value, "is_reliable", is_reliable);
+    add_assoc_string(return_value, "language_code", dl.language_code, 1);
+    add_assoc_string(return_value, "language_name", dl.language_name, 1);
+    add_assoc_long(return_value, "language_probability", dl.probability);
+    add_assoc_bool(return_value, "is_reliable", dl.is_reliable);
 }
 
 
@@ -98,80 +111,26 @@ PHP_METHOD(cld2_detector, getTldHint)
     RETVAL_ZVAL(tld_hint, 1, 0);
 }
 
-//PHP_METHOD(cld2_detector, setTldHint)
-//{
-//    char *hint;
-//    int hint_len;
-//
-//    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &hint, &hint_len) == FAILURE) {
-//        RETURN_NULL();
-//    }
-//
-//    CLD2Detector *detector;
-//    cld2 *obj = (cld2 *)zend_object_store_get_object(
-//            getThis() TSRMLS_CC);
-//    detector = obj->detector;
-//
-//    if (detector == NULL) {
-//        RETURN_NULL();
-//    }
-//
-//    detector->setTldHint(hint);
-//}
-//
-//PHP_METHOD(cld2_detector, getEncHint)
-//{
-//    CLD2Detector *detector;
-//    cld2 *obj = (cld2 *)zend_object_store_get_object(getThis() TSRMLS_CC);
-//    detector = obj->detector;
-//    if (detector == NULL) {
-//        RETURN_NULL();
-//    }
-//
-//    RETURN_LONG(detector->getEncHint());
-//}
-//
-//PHP_METHOD(cld2_detector, setEncHint)
-//{
-//    long hint;
-//
-//    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &hint) == FAILURE) {
-//        RETURN_NULL();
-//    }
-//
-//    CLD2Detector *detector;
-//    cld2 *obj = (cld2 *) zend_object_store_get_object(getThis() TSRMLS_CC);
-//    detector = obj->detector;
-//
-//    if (detector == NULL) {
-//        RETURN_NULL();
-//    }
-//
-//    detector->setEncHint(hint);
-//
-//}
-//
-//// TODO: complete this method
-//PHP_METHOD(cld2_detector, getLangHint)
-//{
-//}
-//
-//// TODO: complete this method
-//PHP_METHOD(cld2_detector, setLangHint)
-//{
-//}
+PHP_METHOD(cld2_detector, setTldHint)
+{
+    zval *detector;
+
+    char *hint;
+    int hint_len;
+
+    if (zend_parse_method_parameters(ZEND_NUM_ARGS() TSRMLS_CC, getThis(), "Os", &detector, cld2_detector_ce, &hint, &hint_len) == FAILURE) {
+        RETURN_NULL();
+    }
+
+    zend_update_property_string(cld2_detector_ce, detector, "tldHint", sizeof("tldHint") - 1, hint TSRMLS_CC);
+}
 
 zend_function_entry cld2_methods[] = {
-    PHP_ME(cld2_detector, __construct, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
     PHP_ME(cld2_detector, detect, NULL, ZEND_ACC_PUBLIC)
     PHP_ME(cld2_detector, isPlainText, NULL, ZEND_ACC_PUBLIC)
     PHP_ME(cld2_detector, setPlainText, NULL, ZEND_ACC_PUBLIC)
     PHP_ME(cld2_detector, getTldHint, NULL, ZEND_ACC_PUBLIC)
-//    PHP_ME(cld2_detector, setTldHint, NULL, ZEND_ACC_PUBLIC)
-//    PHP_ME(cld2_detector, getEncHint, NULL, ZEND_ACC_PUBLIC)
-//    PHP_ME(cld2_detector, setEncHint, NULL, ZEND_ACC_PUBLIC)
-//    PHP_ME(cld2_detector, getLangHint, NULL, ZEND_ACC_PUBLIC)
-//    PHP_ME(cld2_detector, setLangHint, NULL, ZEND_ACC_PUBLIC)
+    PHP_ME(cld2_detector, setTldHint, NULL, ZEND_ACC_PUBLIC)
     {NULL, NULL, NULL}
 };
 

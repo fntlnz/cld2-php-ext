@@ -5,7 +5,9 @@
 
 ```php
 $cld2 = new \CLD2Detector();
-$lang = $cld2->detect('My name is Melissa');
+$cld2->setTldHint('it'); // optional, hints about the Top level domain (it: italian, fr: french, de: german etc..)
+$detect = $cld2->detect('My name is Melissa');
+
 // Output
 array(4) {
   ["language_code"]=>
