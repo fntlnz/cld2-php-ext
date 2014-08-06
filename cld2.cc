@@ -2,6 +2,7 @@
 #include "compact_lang_det_impl.h"
 
 zend_class_entry *cld2_detector_ce;
+zend_class_entry *cld2_language_ce;
 zend_object_handlers cld2_object_handlers;
 
 struct st_detected_language {
@@ -136,13 +137,21 @@ zend_function_entry cld2_methods[] = {
 
 PHP_MINIT_FUNCTION(cld2)
 {
+    // Detector
     zend_class_entry ce;
     INIT_CLASS_ENTRY(ce, "CLD2Detector", cld2_methods);
     cld2_detector_ce = zend_register_internal_class(&ce TSRMLS_CC);
     zend_declare_property_bool(cld2_detector_ce, "isPlainText", sizeof("isPlainText") - 1 , 0, ZEND_ACC_PUBLIC TSRMLS_CC);
     zend_declare_property_string(cld2_detector_ce, "tldHint", sizeof("tldHint") - 1, "", ZEND_ACC_PUBLIC TSRMLS_CC);
+
+    // Language
+    zend_class_entry ce_Language;
+    INIT_CLASS_ENTRY(ce_Language, "CLD2Language", NULL);
+    cld2_language_ce = zend_register_internal_class(&ce_Language TSRMLS_CC);
+ 
     memcpy(&cld2_object_handlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers));
     cld2_object_handlers.clone_obj = NULL;
+
     return SUCCESS;
 }
 
