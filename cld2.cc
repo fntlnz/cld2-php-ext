@@ -5,6 +5,7 @@ zend_class_entry *cld2_detector_ce;
 zend_class_entry *cld2_language_ce;
 zend_object_handlers cld2_object_handlers;
 
+
 struct st_detected_language {
     CLD2::Language language;
     int probability;
@@ -50,6 +51,12 @@ st_detected_language detect_language(char *text, int text_len, bool is_plain_tex
     return dl;
 }
 
+bool check_language(CLD2::Language lang)
+{
+    return !(lang < 0 || lang > CLD2::NUM_LANGUAGES);
+}
+
+// CLD2Detector->detect(string $text)
 PHP_METHOD(cld2_detector, detect)
 {
     zval *detector, *is_plain, *tld_hint;
@@ -73,7 +80,7 @@ PHP_METHOD(cld2_detector, detect)
     add_assoc_bool(return_value, "is_reliable", dl.is_reliable);
 }
 
-
+// CLD2Detector->isPlainText()
 PHP_METHOD(cld2_detector, isPlainText)
 {
     zval *detector, *is_plain;
@@ -87,6 +94,7 @@ PHP_METHOD(cld2_detector, isPlainText)
     RETVAL_ZVAL(is_plain, 1, 0);
 }
 
+// CLD2Detector->setPlainText(bool $isPlainText)
 PHP_METHOD(cld2_detector, setPlainText)
 {
     zval *detector;
@@ -99,6 +107,7 @@ PHP_METHOD(cld2_detector, setPlainText)
     zend_update_property_bool(cld2_detector_ce, detector, "isPlainText", sizeof("isPlainText") -1, is_plain TSRMLS_CC);
 }
 
+// CLD2Detector->getTldHint()
 PHP_METHOD(cld2_detector, getTldHint)
 {
     zval *detector, *tld_hint;
@@ -112,6 +121,7 @@ PHP_METHOD(cld2_detector, getTldHint)
     RETVAL_ZVAL(tld_hint, 1, 0);
 }
 
+// CLD2Detector->setTldHint(string $hint)
 PHP_METHOD(cld2_detector, setTldHint)
 {
     zval *detector;
@@ -126,6 +136,7 @@ PHP_METHOD(cld2_detector, setTldHint)
     zend_update_property_string(cld2_detector_ce, detector, "tldHint", sizeof("tldHint") - 1, hint TSRMLS_CC);
 }
 
+
 zend_function_entry cld2_methods[] = {
     PHP_ME(cld2_detector, detect, NULL, ZEND_ACC_PUBLIC)
     PHP_ME(cld2_detector, isPlainText, NULL, ZEND_ACC_PUBLIC)
@@ -135,6 +146,34 @@ zend_function_entry cld2_methods[] = {
     {NULL, NULL, NULL}
 };
 
+
+// Language Methods
+
+
+//CLD2Language::getName(int $language)
+PHP_METHOD(cld2_language, getName)
+{
+    long language;
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &language) == FAILURE) {
+        return;
+    }
+
+    CLD2::Language l = (CLD2::Language) (language);
+
+    if (!check_language(l)) {
+        //TODO: Handle this error
+    };
+
+    RETURN_STRING(CLD2::LanguageName(l), 1);
+}
+
+zend_function_entry cld2_language_methods[] = {
+        PHP_ME(cld2_language, getName, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
+        {NULL, NULL, NULL}
+};
+
+// MINIT
 PHP_MINIT_FUNCTION(cld2)
 {
     // Detector
@@ -146,14 +185,14 @@ PHP_MINIT_FUNCTION(cld2)
 
     // Language
     zend_class_entry ce_Language;
-    INIT_CLASS_ENTRY(ce_Language, "CLD2Language", NULL);
+    INIT_CLASS_ENTRY(ce_Language, "CLD2Language", cld2_language_methods);
     cld2_language_ce = zend_register_internal_class(&ce_Language TSRMLS_CC);
 
     for (int i = 0; i < CLD2::NUM_LANGUAGES; i++) {
         CLD2::Language lan = (CLD2::Language)(i);
         zend_declare_class_constant_long(cld2_language_ce, CLD2::LanguageName(lan),  strlen(CLD2::LanguageName(lan)), i);
     }
- 
+
     memcpy(&cld2_object_handlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers));
     cld2_object_handlers.clone_obj = NULL;
 
@@ -164,7 +203,7 @@ zend_module_entry cld2_module_entry = {
     STANDARD_MODULE_HEADER,
     PHP_CLD2_EXTNAME,
     NULL,                  /* Functions */
-    PHP_MINIT(cld2),
+    PHP_MINIT(cld2),       /* MINIT */
     NULL,                  /* MSHUTDOWN */
     NULL,                  /* RINIT */
     NULL,                  /* RSHUTDOWN */

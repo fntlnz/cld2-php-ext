@@ -3,6 +3,8 @@
 
 ## Usage
 
+### Detector
+
 ```php
 $cld2 = new \CLD2Detector();
 $cld2->setTldHint('it'); // optional, hints about the Top level domain (it: italian, fr: french, de: german etc..)
@@ -20,6 +22,17 @@ array(4) {
   bool(true)
 }
 
+```
+
+
+### Language
+
+```php
+$english = CLD2Language::ENGLISH;
+echo CLD2Language::getName($english);
+
+// Output
+ENGLISH
 ```
 
 ## Installation
