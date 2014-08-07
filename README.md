@@ -27,13 +27,23 @@ array(4) {
 
 ### Language
 
+Get language name from Language id
 ```php
-$english = CLD2Language::ENGLISH;
-echo CLD2Language::getName($english);
+$lang = CLD2Language::PAMPANGA;
+echo CLD2Language::languageName($lang);
 
 // Output
-ENGLISH
+string(8) "PAMPANGA"
 ```
+
+Get language id from name where Name can be either full name or ISO code, or can be ISO code embedded in a language-script combination such as "en-Latn-GB"
+```php
+echo CLD2Language::getLanguageFromName('PAMPANGA');
+
+// Output
+int(176)
+``` 
+ 
 
 ## Installation
 
