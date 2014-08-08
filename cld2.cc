@@ -14,7 +14,7 @@ struct st_detected_language {
     char* language_name;
 };
 
-st_detected_language detect_language(char *text, int text_len, bool is_plain_text, char *tld_hint)
+st_detected_language detect_language(char *text, int text_len, bool is_plain_text, char *tld_hint, long language_hint)
 {
     int flags = 0;
     bool is_reliable;
@@ -27,7 +27,7 @@ st_detected_language detect_language(char *text, int text_len, bool is_plain_tex
 
     //CLD2::CLDHints cld_hints = {NULL, this->getTldHint(), this->getEncHint(), this->getLangHint()};
 
-    CLD2::CLDHints cld_hints = {NULL, tld_hint, 0, CLD2::UNKNOWN_LANGUAGE};
+    CLD2::CLDHints cld_hints = {NULL, tld_hint, 0, (CLD2::Language) language_hint};
     CLD2::Language lang = CLD2::ExtDetectLanguageSummary(
                 text,
                 text_len,
@@ -59,7 +59,7 @@ bool check_language(CLD2::Language lang)
 // CLD2Detector->detect(string $text)
 PHP_METHOD(cld2_detector, detect)
 {
-    zval *detector, *is_plain, *tld_hint;
+    zval *detector, *is_plain, *tld_hint, *language_hint;
     char *text;
     int text_len;
 
@@ -67,10 +67,12 @@ PHP_METHOD(cld2_detector, detect)
         RETURN_NULL();
     }
 
-    is_plain = zend_read_property(cld2_detector_ce, detector, "isPlainText", sizeof("isPlainText") -1, 1 TSRMLS_CC);
-    tld_hint = zend_read_property(cld2_detector_ce, detector, "tldHint", sizeof("tldHint") -1, 1 TSRMLS_CC);
+    is_plain = zend_read_property(cld2_detector_ce, detector, "isPlainText", sizeof("isPlainText") - 1, 1 TSRMLS_CC);
+    tld_hint = zend_read_property(cld2_detector_ce, detector, "tldHint", sizeof("tldHint") - 1, 1 TSRMLS_CC);
+    language_hint = zend_read_property(cld2_detector_ce, detector, "languageHint", sizeof("languageHint") - 1, 1 TSRMLS_CC);
 
-    st_detected_language dl = detect_language(text, text_len, (bool) is_plain, (char *) tld_hint);
+    st_detected_language dl = detect_language(text, text_len, (bool) is_plain, (char *) tld_hint, (long) language_hint);
+
 
     // Prepare array
     array_init(return_value);
@@ -178,7 +180,6 @@ zend_function_entry cld2_methods[] = {
 
 
 // Language Methods
-
 
 //CLD2Language::languageName(int $language)
 PHP_METHOD(cld2_language, languageName)
