@@ -136,6 +136,34 @@ PHP_METHOD(cld2_detector, setTldHint)
     zend_update_property_string(cld2_detector_ce, detector, "tldHint", sizeof("tldHint") - 1, hint TSRMLS_CC);
 }
 
+// CLD2Detector->getLanguageHint()
+PHP_METHOD(cld2_detector, getLanguageHint)
+{
+    zval *detector, *languageHint;
+
+    if (zend_parse_method_parameters(ZEND_NUM_ARGS() TSRMLS_CC, getThis(), "O", &detector, cld2_detector_ce) == FAILURE) {
+        RETURN_NULL();
+    }
+
+    languageHint = zend_read_property(cld2_detector_ce, detector, "languageHint", sizeof("languageHint") - 1, 1 TSRMLS_CC);
+
+    RETVAL_ZVAL(languageHint, 1, 0);
+}
+
+
+// CLD2Detector->setLanguageHint(int $hint)
+PHP_METHOD(cld2_detector, setLanguageHint)
+{
+    zval *detector;
+    long hint;
+
+    if (zend_parse_method_parameters(ZEND_NUM_ARGS() TSRMLS_CC, getThis(), "Ol", &detector, cld2_detector_ce, &hint) == FAILURE) {
+        RETURN_NULL();
+    }
+
+    zend_update_property_long(cld2_detector_ce, detector, "languageHint", sizeof("languageHint") - 1, hint TSRMLS_CC);
+}
+
 
 zend_function_entry cld2_methods[] = {
     PHP_ME(cld2_detector, detect, NULL, ZEND_ACC_PUBLIC)
@@ -143,6 +171,8 @@ zend_function_entry cld2_methods[] = {
     PHP_ME(cld2_detector, setPlainText, NULL, ZEND_ACC_PUBLIC)
     PHP_ME(cld2_detector, getTldHint, NULL, ZEND_ACC_PUBLIC)
     PHP_ME(cld2_detector, setTldHint, NULL, ZEND_ACC_PUBLIC)
+    PHP_ME(cld2_detector, getLanguageHint, NULL, ZEND_ACC_PUBLIC)
+    PHP_ME(cld2_detector, setLanguageHint, NULL, ZEND_ACC_PUBLIC)
     {NULL, NULL, NULL}
 };
 
@@ -196,6 +226,7 @@ PHP_MINIT_FUNCTION(cld2)
     cld2_detector_ce = zend_register_internal_class(&ce TSRMLS_CC);
     zend_declare_property_bool(cld2_detector_ce, "isPlainText", sizeof("isPlainText") - 1 , 0, ZEND_ACC_PUBLIC TSRMLS_CC);
     zend_declare_property_string(cld2_detector_ce, "tldHint", sizeof("tldHint") - 1, "", ZEND_ACC_PUBLIC TSRMLS_CC);
+    zend_declare_property_long(cld2_detector_ce, "languageHint", sizeof("languageHint") - 1, CLD2::UNKNOWN_LANGUAGE, ZEND_ACC_PUBLIC TSRMLS_CC);
 
     // Language
     zend_class_entry ce_Language;
