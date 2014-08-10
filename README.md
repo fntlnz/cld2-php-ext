@@ -83,17 +83,18 @@ To contribute you need [PHP built for extension development](http://php.net/manu
 For this purpose you can use the Dockerfile distributed with the project.
 Using that Dockerfile, these are the steps:
 
-Build the container (only the first time)
+- Build the container (only the first time)
 Replace `~/Projects` with your projects directory
+
 ```bash
 git clone git@github.com:fntlnz/cld2-php-ext.git ~/Projects/cld2-php-ext 
 cd ~/Projects/cld2-php-ext
 docker build -t fntlnz/cld2-php-ext .
 ```
 
-Do your changes...
+- Do your changes...
 
-Test your changes replacing /path/to/cld2-php-ext with your path and replacing the command `"echo CLD2Language::ITALIAN;"` with your own remembering that the
+- Test your changes replacing /path/to/cld2-php-ext with your path and replacing the command `"echo CLD2Language::ITALIAN;"` with your own remembering that the
 entrypoint is `php` and that this command will issue a phpize, make and make install of the extension every time.
 
 ```bash
