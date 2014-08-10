@@ -236,7 +236,7 @@ PHP_MINIT_FUNCTION(cld2)
 
     for (int i = 0; i < CLD2::NUM_LANGUAGES; i++) {
         CLD2::Language lan = (CLD2::Language)(i);
-        zend_declare_class_constant_long(cld2_language_ce, CLD2::LanguageName(lan),  strlen(CLD2::LanguageName(lan)), i);
+        zend_declare_class_constant_long(cld2_language_ce, CLD2::LanguageName(lan),  strlen(CLD2::LanguageName(lan)), i TSRMLS_CC);
     }
 
     memcpy(&cld2_object_handlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers));
