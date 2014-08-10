@@ -77,7 +77,7 @@ sudo make install
 Do not forget to add `extension=cld2.so` to your PHP ini.
 
 
-### Contribute
+## Contribute
 
 To contribute you need [PHP built for extension development](http://php.net/manual/en/internals2.buildsys.environment.php),
 For this purpose you can use the Dockerfile distributed with the project.
