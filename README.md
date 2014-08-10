@@ -47,6 +47,11 @@ int(176)
 
 ## Installation
 
+## From PEAR
+Not submitted yet.
+
+## Build from source
+
 First of all clone current repository and enter into its directory.
 
 ```bash
@@ -54,7 +59,7 @@ git clone git@github.com:fntlnz/cld2-php-ext.git
 cd cld2-php-ext
 ```
 
-### Compile CLD2 library
+**Compile CLD2 library**
 
 ```bash
 git svn clone http://cld2.googlecode.com/svn/trunk/ libcld2
@@ -63,7 +68,7 @@ cd libcld2/internal
 sudo cp libcld2.so /usr/local/lib 
 ```
 
-### Compile CLD2 PHP extension
+**Compile CLD2 PHP extension**
 
 Come back to the `cld2-php-ext` directory and execute:
 
@@ -83,8 +88,9 @@ To contribute you need [PHP built for extension development](http://php.net/manu
 For this purpose you can use the Dockerfile distributed with the project.
 Using that Dockerfile, these are the steps:
 
-- Build the container (only the first time)
 Replace `~/Projects` with your projects directory
+
+- Build the container (only the first time)
 
     ```bash
     git clone git@github.com:fntlnz/cld2-php-ext.git ~/Projects/cld2-php-ext 
@@ -94,8 +100,7 @@ Replace `~/Projects` with your projects directory
 
 - Do your changes...
 
-- Test your changes replacing /path/to/cld2-php-ext with your path and replacing the command `"echo CLD2Language::ITALIAN;"` with your own remembering that the
-entrypoint is `php` and that this command will issue a phpize, make and make install of the extension every time.
+- Test your changes.
 
     ```bash
     docker  run --rm -v ~/Projects/cld2-php-ext:/cld2-php-ext fntlnz/cld2-php-ext "echo CLD2Language::languageName(CLD2Language::ITALIAN);"
