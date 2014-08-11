@@ -196,7 +196,26 @@ PHP_METHOD(cld2_language, languageName)
         //TODO: Handle this error
     };
 
+
     RETURN_STRING(CLD2::LanguageName(l), 1);
+}
+
+//CLD2Language::languageCode(int $language)
+PHP_METHOD(cld2_language, languageCode)
+{
+    long language;
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &language) == FAILURE) {
+        RETURN_NULL();
+    }
+
+    CLD2::Language l = (CLD2::Language) (language);
+
+    if (!check_language(l)) {
+        //TODO: Handle this error
+    };
+
+    RETURN_STRING(CLD2::LanguageCode(l), 1);
 }
 
 // CLD2Language::getLanguageFromName(string name)
@@ -214,6 +233,7 @@ PHP_METHOD(cld2_language, getLanguageFromName)
 
 zend_function_entry cld2_language_methods[] = {
         PHP_ME(cld2_language, languageName, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
+        PHP_ME(cld2_language, languageCode, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
         PHP_ME(cld2_language, getLanguageFromName, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
         {NULL, NULL, NULL}
 };

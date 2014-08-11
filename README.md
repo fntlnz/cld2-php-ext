@@ -8,6 +8,7 @@
 ```php
 $cld2 = new \CLD2Detector();
 $cld2->setTldHint('it'); // optional, hints about the Top level domain (it: italian, fr: french, de: german etc..)
+$cld2->setLanguageHint(CLD2Language::GERMAN); // optional, hints about the language. 
 $detect = $cld2->detect('My name is Melissa');
 
 // Output
@@ -36,9 +37,19 @@ echo CLD2Language::languageName($lang);
 string(8) "PAMPANGA"
 ```
 
+Get language code from Language id
+```php
+echo CLD2Language::languageCode(CLD2Language::PAMPANGA);
+
+// Output
+string(3) "pam"
+```
+
 Get language id from name where Name can be either full name or ISO code, or can be ISO code embedded in a language-script combination such as "en-Latn-GB"
 ```php
 echo CLD2Language::getLanguageFromName('PAMPANGA');
+// or
+echo CLD2Language::getLanguageFromName('pam');
 
 // Output
 int(176)
