@@ -1,8 +1,10 @@
 #include "php_cld2.h"
 #include "compact_lang_det_impl.h"
+#include "encodings.h"
 
 zend_class_entry *cld2_detector_ce;
 zend_class_entry *cld2_language_ce;
+zend_class_entry *cld2_encoding_ce;
 zend_object_handlers cld2_object_handlers;
 
 
@@ -55,6 +57,10 @@ bool check_language(CLD2::Language lang)
 {
     return !(lang < 0 || lang > CLD2::NUM_LANGUAGES);
 }
+
+/* ============================================ */
+/* Detector                                     */
+/* ============================================ */
 
 // CLD2Detector->detect(string $text)
 PHP_METHOD(cld2_detector, detect)
@@ -179,7 +185,9 @@ zend_function_entry cld2_methods[] = {
 };
 
 
-// Language Methods
+/* ============================================ */
+/* Language                                     */
+/* ============================================ */
 
 //CLD2Language::languageName(int $language)
 PHP_METHOD(cld2_language, languageName)
@@ -238,6 +246,16 @@ zend_function_entry cld2_language_methods[] = {
         {NULL, NULL, NULL}
 };
 
+
+/* ============================================ */
+/* Encoding                                     */
+/* ============================================ */
+
+
+zend_function_entry cld2_encoding_methods[] = {
+        {NULL, NULL, NULL}
+};
+
 // MINIT
 PHP_MINIT_FUNCTION(cld2)
 {
@@ -258,6 +276,17 @@ PHP_MINIT_FUNCTION(cld2)
         CLD2::Language lan = (CLD2::Language)(i);
         zend_declare_class_constant_long(cld2_language_ce, CLD2::LanguageName(lan),  strlen(CLD2::LanguageName(lan)), i TSRMLS_CC);
     }
+
+    // Encoding
+    zend_class_entry ce_Encoding;
+    INIT_CLASS_ENTRY(ce_Encoding, "CLD2Encoding", cld2_encoding_methods);
+    cld2_encoding_ce = zend_register_internal_class(&ce_Encoding TSRMLS_CC);
+
+//   Todo: CLD2 does not provide literal values for encodings, I can't write constants unless I don't implement literals for encodings.
+//    for (int i = 0; i < CLD2::NUM_ENCODINGS; i++) {
+//        CLD2::Encoding enc = (CLD2::Encoding) (i);
+//        zend_declare_class_constant_long(cld2_language_ce, "encoding_name", strlen("encoding_name"), i TSRMLS_CC);
+//    }
 
     memcpy(&cld2_object_handlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers));
     cld2_object_handlers.clone_obj = NULL;
