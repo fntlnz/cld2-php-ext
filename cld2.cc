@@ -1,6 +1,7 @@
 #include "php_cld2.h"
-#include "compact_lang_det_impl.h"
+#include "internal/compact_lang_det_impl.h"
 #include "encodings.h"
+#include "public/encodings.h"
 
 zend_class_entry *cld2_detector_ce;
 zend_class_entry *cld2_language_ce;
@@ -82,6 +83,7 @@ PHP_METHOD(cld2_detector, detect)
 
     // Prepare array
     array_init(return_value);
+    add_assoc_long(return_value, "language_id", (int) (dl.language));
     add_assoc_string(return_value, "language_code", dl.language_code, 1);
     add_assoc_string(return_value, "language_name", dl.language_name, 1);
     add_assoc_long(return_value, "language_probability", dl.probability);
@@ -282,11 +284,10 @@ PHP_MINIT_FUNCTION(cld2)
     INIT_CLASS_ENTRY(ce_Encoding, "CLD2Encoding", cld2_encoding_methods);
     cld2_encoding_ce = zend_register_internal_class(&ce_Encoding TSRMLS_CC);
 
-//   Todo: CLD2 does not provide literal values for encodings, I can't write constants unless I don't implement literals for encodings.
-//    for (int i = 0; i < CLD2::NUM_ENCODINGS; i++) {
-//        CLD2::Encoding enc = (CLD2::Encoding) (i);
-//        zend_declare_class_constant_long(cld2_language_ce, "encoding_name", strlen("encoding_name"), i TSRMLS_CC);
-//    }
+    for (int i = 0; i < CLD2::NUM_ENCODINGS; i++) {
+        CLD2::Encoding enc = (CLD2::Encoding) (i);
+        zend_declare_class_constant_long(cld2_encoding_ce, encodingStrings[i], strlen(encodingStrings[i]), i TSRMLS_CC);
+    }
 
     memcpy(&cld2_object_handlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers));
     cld2_object_handlers.clone_obj = NULL;

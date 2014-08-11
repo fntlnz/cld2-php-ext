@@ -8,18 +8,21 @@
 ```php
 $cld2 = new \CLD2Detector();
 $cld2->setTldHint('it'); // optional, hints about the Top level domain (it: italian, fr: french, de: german etc..)
-$cld2->setLanguageHint(CLD2Language::GERMAN); // optional, hints about the language. 
-$detect = $cld2->detect('My name is Melissa');
+$cld2->setLanguageHint(CLD2Language::GERMAN); // optional, hints about the language.
+ 
+var_dump($cld2->detect('My name is Melissa'));
 
 // Output
-array(4) {
-  ["language_code"]=>
+array(5) {
+  'language_id' =>
+  int(0)
+  'language_code' =>
   string(2) "en"
-  ["language_name"]=>
+  'language_name' =>
   string(7) "ENGLISH"
-  ["language_probability"]=>
+  'language_probability' =>
   int(95)
-  ["is_reliable"]=>
+  'is_reliable' =>
   bool(true)
 }
 
