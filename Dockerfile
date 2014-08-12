@@ -13,7 +13,7 @@ WORKDIR /cld2-php-ext
 
 
 RUN echo '#!/bin/bash' >> /usr/local/bin/run.sh
-RUN echo 'phpize --clean && phpize && ./configure --with-cld2=/libcld2 && make && make install' >> /usr/local/bin/run.sh
+RUN echo 'phpize --clean && phpize && ./configure --with-cld2=/libcld2 && make && make test && make install' >> /usr/local/bin/run.sh
 RUN echo '/usr/local/bin/php -d extension=cld2.so -r "$@"' >> /usr/local/bin/run.sh
 RUN chmod +x /usr/local/bin/run.sh
 
