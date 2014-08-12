@@ -56,6 +56,11 @@ bool check_language(CLD2::Language lang)
     return !(lang < 0 || lang > CLD2::NUM_LANGUAGES);
 }
 
+bool check_encoding(long encoding)
+{
+    return !(encoding < 0 || encoding > CLD2::NUM_ENCODINGS);
+}
+
 /* ============================================ */
 /* Detector                                     */
 /* ============================================ */
@@ -248,7 +253,7 @@ PHP_METHOD(cld2_language, languageCode)
     CLD2::Language l = (CLD2::Language) (language);
 
     if (!check_language(l)) {
-        //TODO: Handle this error
+        // TODO: handle this case
     };
 
     RETURN_STRING(CLD2::LanguageCode(l), 1);
@@ -279,7 +284,25 @@ zend_function_entry cld2_language_methods[] = {
 /* Encoding                                     */
 /* ============================================ */
 
+// CLD2Encoding::encodingName(int $encoding)
+PHP_METHOD(cld2_encoding, encodingName)
+{
+    long encoding;
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &encoding) == FAILURE) {
+        RETURN_NULL();
+    }
+
+    if (!check_encoding(encoding)) {
+       RETURN_STRING(encodingStrings[CLD2::UNKNOWN_ENCODING], 1);
+    }
+
+    RETURN_STRING(encodingStrings[encoding], 1);
+    
+}
+
 zend_function_entry cld2_encoding_methods[] = {
+        PHP_ME(cld2_encoding, encodingName, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
         {NULL, NULL, NULL}
 };
 
