@@ -3,6 +3,7 @@ CLD2Detector Tests
 --FILE--
 <?php
 $cld2 = new CLD2Detector();
+var_dump($cld2);
 var_dump($cld2->isPlainText());
 $cld2->setPlainText(true);
 var_dump($cld2->isPlainText());
@@ -18,6 +19,16 @@ var_dump($cld2->getEncodingHint());
 var_dump($cld2->detect('My name is Melissa'));
 ?>
 --EXPECT--
+object(CLD2Detector)#1 (4) {
+  ["isPlainText"]=>
+  bool(false)
+  ["tldHint"]=>
+  string(0) ""
+  ["languageHint"]=>
+  int(26)
+  ["encodingHint"]=>
+  int(23)
+}
 bool(false)
 bool(true)
 string(0) ""
