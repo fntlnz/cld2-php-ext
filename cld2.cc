@@ -8,7 +8,6 @@ zend_class_entry *cld2_language_ce;
 zend_class_entry *cld2_encoding_ce;
 zend_object_handlers cld2_object_handlers;
 
-
 struct st_detected_language {
     CLD2::Language language;
     int probability;
@@ -17,7 +16,7 @@ struct st_detected_language {
     char* language_name;
 };
 
-st_detected_language detect_language(char *text, int text_len, bool is_plain_text, char *tld_hint, long language_hint)
+st_detected_language detect_language(char *text, int text_len, bool is_plain_text, char *tld_hint, long language_hint, long encoding_hint)
 {
     int flags = 0;
     bool is_reliable;
@@ -28,9 +27,7 @@ st_detected_language detect_language(char *text, int text_len, bool is_plain_tex
     double normalized_score3[3];
     int text_bytes;
 
-    //CLD2::CLDHints cld_hints = {NULL, this->getTldHint(), this->getEncHint(), this->getLangHint()};
-
-    CLD2::CLDHints cld_hints = {NULL, tld_hint, 0, (CLD2::Language) language_hint};
+    CLD2::CLDHints cld_hints = {NULL, tld_hint, (CLD2::Encoding) encoding_hint, (CLD2::Language) language_hint};
     CLD2::Language lang = CLD2::ExtDetectLanguageSummary(
                 text,
                 text_len,
@@ -66,7 +63,7 @@ bool check_language(CLD2::Language lang)
 // CLD2Detector->detect(string $text)
 PHP_METHOD(cld2_detector, detect)
 {
-    zval *detector, *is_plain, *tld_hint, *language_hint;
+    zval *detector, *is_plain, *tld_hint, *language_hint, *encoding_hint;
     char *text;
     int text_len;
 
@@ -77,8 +74,9 @@ PHP_METHOD(cld2_detector, detect)
     is_plain = zend_read_property(cld2_detector_ce, detector, "isPlainText", sizeof("isPlainText") - 1, 1 TSRMLS_CC);
     tld_hint = zend_read_property(cld2_detector_ce, detector, "tldHint", sizeof("tldHint") - 1, 1 TSRMLS_CC);
     language_hint = zend_read_property(cld2_detector_ce, detector, "languageHint", sizeof("languageHint") - 1, 1 TSRMLS_CC);
+    encoding_hint = zend_read_property(cld2_detector_ce, detector, "encodingHint", sizeof("encodingHint") - 1, 1 TSRMLS_CC);
 
-    st_detected_language dl = detect_language(text, text_len, (bool) is_plain, (char *) tld_hint, (long) language_hint);
+    st_detected_language dl = detect_language(text, text_len, (bool) is_plain, (char *) tld_hint, (long) language_hint, (long) encoding_hint);
 
 
     // Prepare array
@@ -174,6 +172,32 @@ PHP_METHOD(cld2_detector, setLanguageHint)
     zend_update_property_long(cld2_detector_ce, detector, "languageHint", sizeof("languageHint") - 1, hint TSRMLS_CC);
 }
 
+// CLD2Detector->setEncodingHint(int $hint)
+PHP_METHOD(cld2_detector, setEncodingHint)
+{
+    zval *detector;
+    long hint;
+    
+    if (zend_parse_method_parameters(ZEND_NUM_ARGS() TSRMLS_CC, getThis(), "Ol", &detector, cld2_detector_ce, &hint) == FAILURE) {
+        RETURN_NULL();
+    }
+
+    zend_update_property_long(cld2_detector_ce, detector, "encodingHint", sizeof("encodingHint") - 1, hint TSRMLS_CC);
+}
+
+// CLD2Detector->getEncodingHint()
+PHP_METHOD(cld2_detector, getEncodingHint)
+{
+    zval *detector, *encodingHint;
+
+    if (zend_parse_method_parameters(ZEND_NUM_ARGS() TSRMLS_CC, getThis(), "O", &detector, cld2_detector_ce) == FAILURE) {
+        RETURN_NULL();
+    }
+
+    encodingHint = zend_read_property(cld2_detector_ce, detector, "encodingHint", sizeof("encodingHint") -1, 1 TSRMLS_CC);
+
+    RETVAL_ZVAL(encodingHint, 1, 0);
+}
 
 zend_function_entry cld2_methods[] = {
     PHP_ME(cld2_detector, detect, NULL, ZEND_ACC_PUBLIC)
@@ -183,6 +207,8 @@ zend_function_entry cld2_methods[] = {
     PHP_ME(cld2_detector, setTldHint, NULL, ZEND_ACC_PUBLIC)
     PHP_ME(cld2_detector, getLanguageHint, NULL, ZEND_ACC_PUBLIC)
     PHP_ME(cld2_detector, setLanguageHint, NULL, ZEND_ACC_PUBLIC)
+    PHP_ME(cld2_detector, getEncodingHint, NULL, ZEND_ACC_PUBLIC)
+    PHP_ME(cld2_detector, setEncodingHint, NULL, ZEND_ACC_PUBLIC)
     {NULL, NULL, NULL}
 };
 
@@ -253,7 +279,6 @@ zend_function_entry cld2_language_methods[] = {
 /* Encoding                                     */
 /* ============================================ */
 
-
 zend_function_entry cld2_encoding_methods[] = {
         {NULL, NULL, NULL}
 };
@@ -268,6 +293,7 @@ PHP_MINIT_FUNCTION(cld2)
     zend_declare_property_bool(cld2_detector_ce, "isPlainText", sizeof("isPlainText") - 1 , 0, ZEND_ACC_PUBLIC TSRMLS_CC);
     zend_declare_property_string(cld2_detector_ce, "tldHint", sizeof("tldHint") - 1, "", ZEND_ACC_PUBLIC TSRMLS_CC);
     zend_declare_property_long(cld2_detector_ce, "languageHint", sizeof("languageHint") - 1, CLD2::UNKNOWN_LANGUAGE, ZEND_ACC_PUBLIC TSRMLS_CC);
+    zend_declare_property_long(cld2_detector_ce, "encodingHint", sizeof("encodingHint") - 1, CLD2::UNKNOWN_ENCODING, ZEND_ACC_PUBLIC TSRMLS_CC);
 
     // Language
     zend_class_entry ce_Language;
