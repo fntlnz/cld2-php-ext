@@ -15,6 +15,7 @@ var_dump($cld2->getLanguageHint());
 var_dump($cld2->getEncodingHint());
 $cld2->setEncodingHint(CLD2Encoding::UTF8);
 var_dump($cld2->getEncodingHint());
+var_dump($cld2->detect('My name is Melissa'));
 ?>
 --EXPECT--
 bool(false)
@@ -25,3 +26,15 @@ int(26)
 int(7)
 int(23)
 int(22)
+array(5) {
+  ["language_id"]=>
+  int(0)
+  ["language_code"]=>
+  string(2) "en"
+  ["language_name"]=>
+  string(7) "ENGLISH"
+  ["language_probability"]=>
+  int(95)
+  ["is_reliable"]=>
+  bool(true)
+}
