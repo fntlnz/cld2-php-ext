@@ -73,7 +73,7 @@ string(4) "UTF8"
 
 ## Installation
 
-## From PEAR
+## From PECL
 Not submitted yet.
 
 ## Build from source
