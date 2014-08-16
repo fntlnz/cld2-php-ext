@@ -65,6 +65,40 @@ bool check_encoding(long encoding)
 /* Detector                                     */
 /* ============================================ */
 
+
+ZEND_BEGIN_ARG_INFO(arginfo_detector_detect, 0)
+	ZEND_ARG_INFO(0, text)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO(arginfo_detector_is_plain_text, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO(arginfo_detector_set_plain_text, 0)
+	ZEND_ARG_INFO(0, plainText)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO(arginfo_detector_get_tld_hint, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO(arginfo_detector_set_tld_hint, 0)
+	ZEND_ARG_INFO(0, tldHint)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO(arginfo_detector_get_language_hint, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO(arginfo_detector_set_language_hint, 0)
+	ZEND_ARG_INFO(0, languageHint)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO(arginfo_detector_get_encoding_hint, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO(arginfo_detector_set_encoding_hint, 0)
+	ZEND_ARG_INFO(0, encodingHint)
+ZEND_END_ARG_INFO()
+
+
 // CLD2Detector->detect(string $text)
 PHP_METHOD(cld2_detector, detect)
 {
@@ -205,15 +239,15 @@ PHP_METHOD(cld2_detector, getEncodingHint)
 }
 
 zend_function_entry cld2_methods[] = {
-    PHP_ME(cld2_detector, detect, NULL, ZEND_ACC_PUBLIC)
-    PHP_ME(cld2_detector, isPlainText, NULL, ZEND_ACC_PUBLIC)
-    PHP_ME(cld2_detector, setPlainText, NULL, ZEND_ACC_PUBLIC)
-    PHP_ME(cld2_detector, getTldHint, NULL, ZEND_ACC_PUBLIC)
-    PHP_ME(cld2_detector, setTldHint, NULL, ZEND_ACC_PUBLIC)
-    PHP_ME(cld2_detector, getLanguageHint, NULL, ZEND_ACC_PUBLIC)
-    PHP_ME(cld2_detector, setLanguageHint, NULL, ZEND_ACC_PUBLIC)
-    PHP_ME(cld2_detector, getEncodingHint, NULL, ZEND_ACC_PUBLIC)
-    PHP_ME(cld2_detector, setEncodingHint, NULL, ZEND_ACC_PUBLIC)
+    PHP_ME(cld2_detector, detect, arginfo_detector_detect, ZEND_ACC_PUBLIC)
+    PHP_ME(cld2_detector, isPlainText, arginfo_detector_is_plain_text, ZEND_ACC_PUBLIC)
+    PHP_ME(cld2_detector, setPlainText, arginfo_detector_set_plain_text, ZEND_ACC_PUBLIC)
+    PHP_ME(cld2_detector, getTldHint, arginfo_detector_get_tld_hint, ZEND_ACC_PUBLIC)
+    PHP_ME(cld2_detector, setTldHint, arginfo_detector_set_tld_hint, ZEND_ACC_PUBLIC)
+    PHP_ME(cld2_detector, getLanguageHint, arginfo_detector_get_language_hint, ZEND_ACC_PUBLIC)
+    PHP_ME(cld2_detector, setLanguageHint, arginfo_detector_set_language_hint, ZEND_ACC_PUBLIC)
+    PHP_ME(cld2_detector, getEncodingHint, arginfo_detector_get_encoding_hint, ZEND_ACC_PUBLIC)
+    PHP_ME(cld2_detector, setEncodingHint, arginfo_detector_set_encoding_hint, ZEND_ACC_PUBLIC)
     {NULL, NULL, NULL}
 };
 
@@ -221,6 +255,18 @@ zend_function_entry cld2_methods[] = {
 /* ============================================ */
 /* Language                                     */
 /* ============================================ */
+
+ZEND_BEGIN_ARG_INFO(arginfo_language_language_name, 0)
+	ZEND_ARG_INFO(0, id)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO(arginfo_language_language_code, 0)
+	ZEND_ARG_INFO(0, id)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO(arginfo_language_get_language_from_name, 0)
+	ZEND_ARG_INFO(0, name)
+ZEND_END_ARG_INFO()
 
 //CLD2Language::languageName(int $language)
 PHP_METHOD(cld2_language, languageName)
@@ -273,9 +319,9 @@ PHP_METHOD(cld2_language, getLanguageFromName)
 }
 
 zend_function_entry cld2_language_methods[] = {
-        PHP_ME(cld2_language, languageName, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
-        PHP_ME(cld2_language, languageCode, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
-        PHP_ME(cld2_language, getLanguageFromName, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
+        PHP_ME(cld2_language, languageName, arginfo_language_language_name, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
+        PHP_ME(cld2_language, languageCode, arginfo_language_language_code, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
+        PHP_ME(cld2_language, getLanguageFromName, arginfo_language_get_language_from_name, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
         {NULL, NULL, NULL}
 };
 
@@ -283,6 +329,10 @@ zend_function_entry cld2_language_methods[] = {
 /* ============================================ */
 /* Encoding                                     */
 /* ============================================ */
+
+ZEND_BEGIN_ARG_INFO(arginfo_encoding_encoding_name, 0)
+	ZEND_ARG_INFO(0, id)
+ZEND_END_ARG_INFO()
 
 // CLD2Encoding::encodingName(int $encoding)
 PHP_METHOD(cld2_encoding, encodingName)
@@ -302,7 +352,7 @@ PHP_METHOD(cld2_encoding, encodingName)
 }
 
 zend_function_entry cld2_encoding_methods[] = {
-        PHP_ME(cld2_encoding, encodingName, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
+        PHP_ME(cld2_encoding, encodingName, arginfo_encoding_encoding_name, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
         {NULL, NULL, NULL}
 };
 
