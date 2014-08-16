@@ -216,7 +216,7 @@ PHP_METHOD(cld2_detector, setEncodingHint)
 {
     zval *detector;
     long hint;
-    
+
     if (zend_parse_method_parameters(ZEND_NUM_ARGS() TSRMLS_CC, getThis(), "Ol", &detector, cld2_detector_ce, &hint) == FAILURE) {
         RETURN_NULL();
     }
@@ -280,7 +280,7 @@ PHP_METHOD(cld2_language, languageName)
     CLD2::Language l = (CLD2::Language) (language);
 
     if (!check_language(l)) {
-        //TODO: Handle this error
+        RETURN_STRING(CLD2::LanguageName(CLD2::UNKNOWN_LANGUAGE), 1);
     };
 
 
@@ -299,7 +299,7 @@ PHP_METHOD(cld2_language, languageCode)
     CLD2::Language l = (CLD2::Language) (language);
 
     if (!check_language(l)) {
-        // TODO: handle this case
+        RETURN_STRING(CLD2::LanguageCode(CLD2::UNKNOWN_LANGUAGE), 1);
     };
 
     RETURN_STRING(CLD2::LanguageCode(l), 1);
@@ -348,7 +348,7 @@ PHP_METHOD(cld2_encoding, encodingName)
     }
 
     RETURN_STRING(encodingStrings[encoding], 1);
-    
+
 }
 
 zend_function_entry cld2_encoding_methods[] = {
