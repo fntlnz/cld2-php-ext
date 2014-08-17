@@ -2,6 +2,8 @@
 CLD2Language Tests
 --DESCRIPTION--
 Tests CLD2Language static methods and properties
+--SKIPIF--
+<?php require_once('skipif.inc'); ?>
 --FILE--
 <?php
 var_dump(CLD2Language::ITALIAN);

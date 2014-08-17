@@ -2,6 +2,8 @@
 CLD2Encoding Tests
 --DESCRIPTION--
 Tests CLD2Encoding static methods and properties
+--SKIPIF--
+<?php require_once('skipif.inc'); ?>
 --FILE--
 <?php
 var_dump(new CLD2Encoding());

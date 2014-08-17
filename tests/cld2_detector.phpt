@@ -2,6 +2,8 @@
 CLD2Detector Tests
 --DESCRIPTION--
 Tests CLD2Detector Class methods and properties
+--SKIPIF--
+<?php require_once('skipif.inc'); ?>
 --FILE--
 <?php
 $cld2 = new CLD2Detector();
