@@ -1,6 +1,7 @@
 ## Compact Language Detector 2 PHP Extension
 
 [![Build Status](https://travis-ci.org/fntlnz/cld2-php-ext.svg?branch=develop)](https://travis-ci.org/fntlnz/cld2-php-ext)
+
 This extension wraps [CLD2](https://code.google.com/p/cld2/) (Compact Language Detector 2) that detects over 80 languages in Unicode UTF-8 text.
 
 ## Usage
