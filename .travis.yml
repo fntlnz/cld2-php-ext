@@ -1,0 +1,22 @@
+language: php
+
+php:
+  - 5.6
+  - 5.5
+  - 5.4
+  - 5.3
+  - 5.2
+
+before_script:
+  - ./.travis/prepare.sh
+  
+# Run PHPs run-tests.php 
+
+script:
+	- phpize
+	- ./configure --with-cld2=libcld2
+	- make
+	- make test
+	- sudo make install
+	
+	
