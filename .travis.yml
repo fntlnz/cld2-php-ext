@@ -10,7 +10,7 @@ php:
   - 5.2
 script: 
   - phpize
-  - "./configure --with-cld2=libcld2"
+  - ./configure --with-cld2=libcld2
   - make
-  - "make test"
-  - "sudo make install"
+  - make test
+  - sudo make install

@@ -8,4 +8,4 @@ cd libcld2/internal
 ./compile_libs.sh
 
 echo "Installing libcld2"
-cp libcld2.so /usr/local/lib
+sudo cp libcld2.so /usr/local/lib
