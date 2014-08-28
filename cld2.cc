@@ -395,7 +395,9 @@ PHP_MINIT_FUNCTION(cld2)
 }
 
 zend_module_entry cld2_module_entry = {
-    STANDARD_MODULE_HEADER,
+	#if ZEND_MODULE_API_NO >= 20010901
+		STANDARD_MODULE_HEADER,
+	#endif
     PHP_CLD2_EXTNAME,
     NULL,                  /* Functions */
     PHP_MINIT(cld2),       /* MINIT */
@@ -403,7 +405,9 @@ zend_module_entry cld2_module_entry = {
     NULL,                  /* RINIT */
     NULL,                  /* RSHUTDOWN */
     NULL,                  /* MINFO */
-    PHP_CLD2_EXTVER,
+	#if ZEND_MODULE_API_NO >= 20010901
+    	PHP_CLD2_EXTVER,
+    #endif
     STANDARD_MODULE_PROPERTIES
 };
 
