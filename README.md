@@ -118,3 +118,5 @@ See [CONTRIBUTING.md](CONTRIBUTING.md)
 
 - [CLD2 library](https://code.google.com/p/cld2)
 - [CLD2 full version](https://code.google.com/p/cld2/wiki/CLD2FullVersion)
+
+[![Analytics](https://ga-beacon.appspot.com/UA-45983436-1/fntlnz/cld2-php-ext)](https://github.com/igrigorik/ga-beacon)
