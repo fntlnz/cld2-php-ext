@@ -1,4 +1,4 @@
-apt-get install git-svn
+sudo apt-get install git-core git-svn
 
 echo "Cloning CLD2"
 git svn clone http://cld2.googlecode.com/svn/trunk/ libcld2
