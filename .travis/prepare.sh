@@ -1,3 +1,5 @@
+#!/bin/sh
+
 sudo apt-get install git-core git-svn
 
 echo "Cloning CLD2"
