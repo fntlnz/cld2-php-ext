@@ -89,8 +89,8 @@ cd cld2-php-ext
 **Compile CLD2 library**
 
 ```bash
-git svn clone http://cld2.googlecode.com/svn/trunk/ libcld2
-cd libcld2/internal
+wget -nv -O - https://github.com/CLD2Owners/cld2/archive/master.tar.gz | tar zx
+cd cld2-master/internal
 ./compile_libs.sh
 sudo cp libcld2.so /usr/local/lib 
 ```
