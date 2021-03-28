@@ -1,6 +1,6 @@
 ## Compact Language Detector 2 PHP Extension
 
-This extension wraps [CLD2](https://code.google.com/p/cld2/) (Compact Language Detector 2) that detects over 80 languages in Unicode UTF-8 text.
+This extension wraps [CLD2](https://github.com/CLD2Owners/cld2) (Compact Language Detector 2) that detects over 80 languages in Unicode UTF-8 text.
 
 ## Usage
 
@@ -91,8 +91,8 @@ cd cld2-php-ext
 ```bash
 wget -nv -O - https://github.com/CLD2Owners/cld2/archive/master.tar.gz | tar zx
 cd cld2-master/internal
-./compile_libs.sh
-sudo cp libcld2.so /usr/local/lib 
+CFLAGS="-Wno-narrowing" ./compile_libs.sh
+sudo cp libcld2.so /usr/local/lib
 ```
 
 **Compile CLD2 PHP extension**
@@ -101,20 +101,25 @@ Come back to the `cld2-php-ext` directory and execute:
 
 ```bash
 phpize
-./configure --with-cld2=libcld2
+./configure --with-cld2=cld2-master
 make -j
 sudo make install
 ```
 
 Do not forget to add `extension=cld2.so` to your PHP ini.
 
+If you have a libtool version mismatch, this may help:
+
+```bash
+rm aclocal.m4
+autoreconf -i
+```
 
 ## Contributing
 See [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## NOTES
 
-- [CLD2 library](https://code.google.com/p/cld2)
-- [CLD2 full version](https://code.google.com/p/cld2/wiki/CLD2FullVersion)
+- [CLD2 library](https://github.com/CLD2Owners/cld2)
 
 [![Analytics](https://ga-beacon.appspot.com/UA-45983436-1/fntlnz/cld2-php-ext)](https://github.com/igrigorik/ga-beacon)
