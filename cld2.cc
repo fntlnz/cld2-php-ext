@@ -112,10 +112,10 @@ PHP_METHOD(cld2_detector, detect)
     }
     zval rv1, rv2, rv3, rv4;
 
-    is_plain = zend_read_property(cld2_detector_ce, detector, "isPlainText", sizeof("isPlainText") - 1, 1, &rv1);
-    tld_hint = zend_read_property(cld2_detector_ce, detector, "tldHint", sizeof("tldHint") - 1, 1, &rv2);
-    language_hint = zend_read_property(cld2_detector_ce, detector, "languageHint", sizeof("languageHint") - 1, 1, &rv3);
-    encoding_hint = zend_read_property(cld2_detector_ce, detector, "encodingHint", sizeof("encodingHint") - 1, 1, &rv4);
+    is_plain = zend_read_property(cld2_detector_ce, Z_OBJ_P(detector), "isPlainText", sizeof("isPlainText") - 1, 1, &rv1);
+    tld_hint = zend_read_property(cld2_detector_ce, Z_OBJ_P(detector), "tldHint", sizeof("tldHint") - 1, 1, &rv2);
+    language_hint = zend_read_property(cld2_detector_ce, Z_OBJ_P(detector), "languageHint", sizeof("languageHint") - 1, 1, &rv3);
+    encoding_hint = zend_read_property(cld2_detector_ce, Z_OBJ_P(detector), "encodingHint", sizeof("encodingHint") - 1, 1, &rv4);
 
     st_detected_language dl = detect_language(text, text_len, (bool) is_plain, (char *) tld_hint, (long) language_hint, (long) encoding_hint);
 
@@ -140,7 +140,7 @@ PHP_METHOD(cld2_detector, isPlainText)
         RETURN_NULL();
     }
     zval rv;
-    is_plain = zend_read_property(cld2_detector_ce, detector, "isPlainText", sizeof("isPlainText") -1, 1, &rv);
+    is_plain = zend_read_property(cld2_detector_ce, Z_OBJ_P(detector), "isPlainText", sizeof("isPlainText") -1, 1, &rv);
 
     RETVAL_ZVAL(is_plain, 1, 0);
 } /* }}} */
@@ -157,7 +157,7 @@ PHP_METHOD(cld2_detector, setPlainText)
         RETURN_NULL();
     }
 
-    zend_update_property_bool(cld2_detector_ce, detector, "isPlainText", sizeof("isPlainText") - 1, is_plain);
+    zend_update_property_bool(cld2_detector_ce, Z_OBJ_P(detector), "isPlainText", sizeof("isPlainText") - 1, is_plain);
 } /* }}} */
 
 /* {{{ proto string CLD2Detector::getTldHint() */
@@ -169,7 +169,7 @@ PHP_METHOD(cld2_detector, getTldHint)
         RETURN_NULL();
     }
     zval rv;
-    tld_hint = zend_read_property(cld2_detector_ce, detector, "tldHint", sizeof("tldHint") - 1, 1, &rv);
+    tld_hint = zend_read_property(cld2_detector_ce, Z_OBJ_P(detector), "tldHint", sizeof("tldHint") - 1, 1, &rv);
 
     RETVAL_ZVAL(tld_hint, 1, 0);
 } /* }}} */
@@ -186,7 +186,7 @@ PHP_METHOD(cld2_detector, setTldHint)
         RETURN_NULL();
     }
 
-    zend_update_property_string(cld2_detector_ce, getThis(), "tldHint", sizeof("tldHint") - 1, hint);
+    zend_update_property_string(cld2_detector_ce, Z_OBJ_P(getThis()), "tldHint", sizeof("tldHint") - 1, hint);
 } /* }}} */
 
 /* {{{ proto int CLD2Detector::getLanguageHint() */
@@ -200,7 +200,7 @@ PHP_METHOD(cld2_detector, getLanguageHint)
     
     zval rv;
 
-    languageHint = zend_read_property(cld2_detector_ce, detector, "languageHint", sizeof("languageHint") - 1, 1, &rv);
+    languageHint = zend_read_property(cld2_detector_ce, Z_OBJ_P(detector), "languageHint", sizeof("languageHint") - 1, 1, &rv);
 
     RETVAL_ZVAL(languageHint, 1, 0);
 } /* }}} */
@@ -215,7 +215,7 @@ PHP_METHOD(cld2_detector, setLanguageHint)
         RETURN_NULL();
     }
 
-    zend_update_property_long(cld2_detector_ce, detector, "languageHint", sizeof("languageHint") - 1, hint);
+    zend_update_property_long(cld2_detector_ce, Z_OBJ_P(detector), "languageHint", sizeof("languageHint") - 1, hint);
 } /* }}} */
 
 /* {{{ proto CLD2Detector::setEncodingHint(int $hint) */
@@ -228,7 +228,7 @@ PHP_METHOD(cld2_detector, setEncodingHint)
         RETURN_NULL();
     }
 
-    zend_update_property_long(cld2_detector_ce, detector, "encodingHint", sizeof("encodingHint") - 1, hint);
+    zend_update_property_long(cld2_detector_ce, Z_OBJ_P(detector), "encodingHint", sizeof("encodingHint") - 1, hint);
 } /* }}} */
 
 /* {{{ proto int CLD2Detector::getEncodingHint() */
@@ -240,7 +240,7 @@ PHP_METHOD(cld2_detector, getEncodingHint)
         RETURN_NULL();
     }
 
-    encodingHint = zend_read_property(cld2_detector_ce, detector, "encodingHint", sizeof("encodingHint") -1, 1, &rv);
+    encodingHint = zend_read_property(cld2_detector_ce, Z_OBJ_P(detector), "encodingHint", sizeof("encodingHint") -1, 1, &rv);
 
     RETVAL_ZVAL(encodingHint, 1, 0);
 } /* }}} */
